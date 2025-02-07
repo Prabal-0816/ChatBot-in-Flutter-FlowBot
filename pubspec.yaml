@@ -36,6 +36,12 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   http:
+  video_player:
+  youtube_player_flutter:
+  path_provider:
+  flutter_tts:
+  image_picker:
+  camera:
 
 dev_dependencies:
   flutter_test:
