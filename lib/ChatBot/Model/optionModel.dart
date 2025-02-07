@@ -1,3 +1,5 @@
+// Contains the options that a node can contain
+
 class Option {
   final String? label;    // the option to be shown on UI
   final String? description;
