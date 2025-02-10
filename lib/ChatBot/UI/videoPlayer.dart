@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class VideoWidget extends StatefulWidget {
+class VideoPlayerWidget extends StatefulWidget {
   final String videoUrl;
 
-  VideoWidget({required this.videoUrl});
+  VideoPlayerWidget({required this.videoUrl});
 
   @override
-  _VideoWidgetState createState() => _VideoWidgetState();
+  _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
 }
 
-class _VideoWidgetState extends State<VideoWidget> {
+class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   VideoPlayerController? _videoController;
   YoutubePlayerController? _youtubeController;
   bool isYoutubeVideo = false;

@@ -42,6 +42,9 @@ dependencies:
   flutter_tts:
   image_picker:
   camera:
+  carousel_slider:
+  wave:
+  audioplayers:
 
 dev_dependencies:
   flutter_test:
