@@ -9,7 +9,7 @@ class BotNode {
   final String? image; // For images from any server
   final String? checkboxOptionTTs;    // the tts will be triggered when the next button of checkbox is clicked
   late final List<Option>? options;   // options of the node
-  final String? nextNode;   // to be defined for each option of radio node and for checkbox node once
+  final String? nextNode;   // mandatory for each checkbox type node, multimedia node
 
   BotNode({
     this.nodeName,

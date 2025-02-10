@@ -332,20 +332,14 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
         return _buildNavigatorNode(node);
       case 'label':
         return _buildLabelNode(node);
-      case 'productNameSelection':
-        return _buildProductNameSelectionNode(node);
-      case 'variantNameSelection':
-        return _buildVariantNameSelection(node);
-      case 'radioType1':
-        return _buildRadioNode1(node);
-      case 'radioType2':
-        return _buildRadioNode2(node);
-      case 'checkboxType1':
-        return _buildCheckboxNode1(node);
-      case 'checkboxType2':
-        return _buildCheckboxNode2(node);
+      case 'radioTypeWithAttachments':
+        return _buildRadioNodeWithAttachments(node);
+      case 'radioTypeWithTextOnly':
+        return _buildRadioNodeWithTextOnly(node);
+      case 'checkboxWithCards':
+        return _buildCheckboxWithCards(node);
       case 'checkboxWithPopUp':
-        return _buildCheckboxNodeWithPopUp(node);
+        return _buildCheckboxWithPopUp(node);
       case 'multimedia':
         return _buildMultiMediaNode(node);
       default:
@@ -371,6 +365,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     return const SizedBox.shrink();
   }
 
+
   // Build label node (simple text)
   Widget _buildLabelNode(BotNode node) {
     return Column(
@@ -386,110 +381,9 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     );
   }
 
-  // Node for product name selection
-  Widget _buildProductNameSelectionNode(BotNode node) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 10),
-        Wrap(
-          spacing: 8.0, // Space between buttons horizontally
-          runSpacing: 8.0, // Space between buttons vertically
-          children: node.options!.map((option) {
-            // Each option is clickable like a radio button
-            return GestureDetector(
-              onTap: () {
-                selectedOptions.add(option.value!);
-                _onOptionSelected(option.nextNode, option.radioOptionTTs);
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0,
-                    vertical: 8.0), // Padding inside the button
-                decoration: BoxDecoration(
-                  color: Colors.white, // Highlight when selected
-                  borderRadius: BorderRadius.circular(18.0), // Rounded corners
-                  border: Border.all(
-                    color: const Color(
-                        0xFFAB2138), // Border color changes on selection
-                    width: 2.0,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2), // Shadow color
-                      offset: const Offset(2, 4), // Offset in X and Y direction
-                      blurRadius: 4, // Spread of the shadow
-                      spreadRadius: 1, // Intensity of the shadow
-                    ),
-                  ],
-                ),
-                child: Text(
-                  option.label ?? 'No Label',
-                  style: const TextStyle(fontSize: 14.0, color: Colors.black
-                    // Color(0xFFAB2138), // Change text color when selected
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
-
-  // Node for variant selection
-  Widget _buildVariantNameSelection(BotNode node) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 10),
-        Wrap(
-          spacing: 8.0, // Space between buttons horizontally
-          runSpacing: 8.0, // Space between buttons vertically
-          children: node.options!.map((option) {
-            // Each option is clickable like a radio button
-            return GestureDetector(
-              onTap: () {
-                selectedOptions.add(option.value!);
-                _onOptionSelected(option.nextNode, option.radioOptionTTs);
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0,
-                    vertical: 8.0), // Padding inside the button
-                decoration: BoxDecoration(
-                  color: Colors.white, // Highlight when selected
-                  borderRadius: BorderRadius.circular(18.0), // Rounded corners
-                  border: Border.all(
-                    color: const Color(
-                        0xFFAB2138), // Border color changes on selection
-                    width: 2.0,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2), // Shadow color
-                      offset: const Offset(2, 4), // Offset in X and Y direction
-                      blurRadius: 4, // Spread of the shadow
-                      spreadRadius: 1, // Intensity of the shadow
-                    ),
-                  ],
-                ),
-                child: Text(
-                  option.label ?? 'No Label',
-                  style: const TextStyle(fontSize: 14.0, color: Colors.black
-                    // Color(0xFFAB2138), // Change text color when selected
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
 
   // Build radio node of Type1(single choice)
-  Widget _buildRadioNode1(BotNode node) {
+  Widget _buildRadioNodeWithAttachments(BotNode node) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Column(
@@ -514,10 +408,6 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                       imageUrls: option.images!,
                     ),
                   ),
-
-                // if(option.images != null && option.images!.isNotEmpty && option.images!.length == 1)
-                //  Single image case to be completed
-
                 // Display audio player if audio is available
                 if (option.audioClip != null)
                   Padding(
@@ -585,8 +475,9 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     );
   }
 
+
   // Build radio node of Type2(single choice)
-  Widget _buildRadioNode2(BotNode node) {
+  Widget _buildRadioNodeWithTextOnly(BotNode node) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -638,111 +529,9 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     );
   }
 
-  // Build checkbox node (multiple choice)
-  Widget _buildCheckboxNode1(BotNode node) {
-    return SingleChildScrollView(
-      // Makes the content scrollable
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 10),
-          // Iterate through the options and build checkboxes for each
-          ...node.options!.map((option) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: _buildCheckboxOption1(option),
-            );
-          }).toList(),
-
-          // Display "Next" button if there's a next node available
-          if (node.nextNode != null)
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                  onPressed: () => _onOptionSelected(node.nextNode, node.checkboxOptionTTs),
-                  child: const Text('Next'),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCheckboxOption1(Option option) {
-    return StatefulBuilder(
-      builder: (context, setState) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Title and Checkbox
-              CheckboxListTile(
-                title: Text(
-                  option.label ?? 'No Label',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                contentPadding: const EdgeInsets.fromLTRB(10, 10, 20, 0),
-                value: selectedOptions.contains(option.value),
-                activeColor: const Color(0xFFAB2138),
-                // tileColor: Color(0xFFAB2138),
-                selectedTileColor: const Color(0xFFAB2138),
-                controlAffinity: ListTileControlAffinity.leading,
-                onChanged: (bool? value) {
-                  setState(() {
-                    if (value != null && value) {
-                      selectedOptions.add(option.value ?? '');
-                    } else {
-                      selectedOptions.remove(option.value);
-                    }
-                  });
-                },
-              ),
-
-              // Display images if available
-              if (option.images != null && option.images!.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: CarouselSliderWidget(
-                    imageUrls: option.images!
-                  ),
-                ),
-
-              // Display audio player if available
-              if (option.audioClip != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: AudioPlayerWidget(audioUrl: option.audioClip!),
-                ),
-
-              // Display video player if available
-              if (option.video != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: VideoPlayerWidget(videoUrl: option.video!),
-                ),
-
-              // Subtitle displayed below attachments
-              if (option.description != null && option.description!.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(left: 16.0, top: 8.0),
-                  child: Text(
-                    option.description!,
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                ),
-            ],
-          ),
-        );
-      },
-    );
-  }
 
 // Build checkbox node (multiple choice)
-  Widget _buildCheckboxNode2(BotNode node) {
+  Widget _buildCheckboxWithCards(BotNode node) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -750,7 +539,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
           const SizedBox(height: 10),
           // Build each checkbox option as a card
           ...node.options!.map((option) {
-            return _buildCheckboxOption2(option);
+            return _buildCheckboxWithCardsOptions(option);
           }).toList(),
           // Display "Next" button if there's a next node available
           if (node.nextNode != null)
@@ -780,7 +569,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     );
   }
 
-  Widget _buildCheckboxOption2(Option option) {
+  Widget _buildCheckboxWithCardsOptions(Option option) {
     return StatefulBuilder(
       builder: (context, setState) {
         final isSelected = selectedOptions.contains(option.value);
@@ -887,8 +676,9 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     );
   }
 
+
   // Build checkbox node (multiple choice)
-  Widget _buildCheckboxNodeWithPopUp(BotNode node) {
+  Widget _buildCheckboxWithPopUp(BotNode node) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1094,6 +884,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
       },
     );
   }
+
 
   // Build Multimedia Node for recording audio, video and capturing images
   Widget _buildMultiMediaNode(BotNode node) {

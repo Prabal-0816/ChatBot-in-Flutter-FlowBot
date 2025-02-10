@@ -4,7 +4,7 @@ class Option {
   final String? label;    // the option to be shown on UI
   final String? description;
   final String? value;
-  final String? nextNode;   // nextNode name which will be triggered when the current option is selected
+  final String? nextNode;   // Will be triggered when the current option is selected in case of Radio Node
   final List<String>? images;   // images to be added with the option
   final String? audioClip;    // the tts module speaks this string when this option is selected
   final String? video;
