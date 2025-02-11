@@ -2,23 +2,18 @@
 
 class Option {
   final String? label;    // the option to be shown on UI
-  final String? description;
-  final String? value;
-  final String? nextNode;   // Will be triggered when the current option is selected in case of Radio Node
-  final List<String>? images;   // images to be added with the option
-  final String? audioClip;    // the tts module speaks this string when this option is selected
-  final String? video;
-
-  // this is for multi media input capture
-  final String? recordVideo;
-  final String? clickPhoto;
-
-  // Just for apiCall which will store the response in the apiResponseList
-  final List<String>? apiCall;
-
-  //ApiCall for fetching the response and showing the response to the user
-  final String? showApiMessage;
-  final String? radioOptionTTs;
+  final String? description;  // option description with lighter shade and smaller text that label
+  final String? value;      // will serve as the answer for the intent of the question
+  final String? nextNode;   // Will be triggered when the any of the option is selected in case of Radio Node
+  final List<String>? images;   // images to be shown along with the option
+  final String? audioClip;    // contains the audio clip to be shown along with the option
+  final String? video;        // contains the video link to be shown along with the option
+  final String? recordVideo;  // this is for multimedia input to record video
+  final String? clickPhoto;   // this is for multimedia input to capture images
+  final String? recordAudio;  // this is for multimedia input to record audio
+  final List<String>? apiCall;  // For apiCall which will store the response in the apiResponseList
+  final String? showApiMessage; // ApiCall for fetching the response and showing the response to the user
+  final String? radioOptionTTs; // Will be triggered when the option of the radio node is selected
 
   Option({
     this.label,
@@ -30,6 +25,7 @@ class Option {
     this.video,
     this.recordVideo,
     this.clickPhoto,
+    this.recordAudio,
     this.apiCall,
     this.showApiMessage,
     this.radioOptionTTs

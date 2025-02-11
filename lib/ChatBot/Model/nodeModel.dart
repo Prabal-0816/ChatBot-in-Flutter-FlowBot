@@ -5,7 +5,7 @@ class BotNode {
   final String? intent;   // keyword for the question which can be further used
   final String? type;   // type of node(radio , label , checkbox , multimedia , navigate)
   final String? botMessage;   // the message to be shown on UI by the Bot
-  final String? description;
+  final String? description;  // Just used for bot
   final String? image; // For images from any server
   final String? checkboxOptionTTs;    // the tts will be triggered when the next button of checkbox is clicked
   late final List<Option>? options;   // options of the node

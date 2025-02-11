@@ -14,22 +14,19 @@ import 'imageCapture.dart';
 
 class BotFlowScreen extends StatefulWidget {
   final String jsonFileName;
-  final bool fromServer;
 
-  BotFlowScreen({
-    required this.jsonFileName,
-    required this.fromServer
-  });
+  BotFlowScreen({required this.jsonFileName});
+
   @override
   _BotFlowScreenState createState() => _BotFlowScreenState();
 }
 
 class _BotFlowScreenState extends State<BotFlowScreen> {
-  late final String jsonFileName = widget.jsonFileName;
   String currentNodeKey = 'Load Bot';
   late final String botType;
   late final String botName;
   late final String botImage;
+  bool isServerLink = false;
 
   // Storing the intent and answer of the flow
   Map<String, List<String>> intentAnswer = {};
@@ -60,6 +57,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
   void initState() {
     super.initState();
     _loadBotFlow();
+    isServerLink = widget.jsonFileName.contains('.http') || widget.jsonFileName.contains('.com');
 
     // configure TTs
     _flutterTts.setLanguage("en-IN");
@@ -71,11 +69,11 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
   void _loadBotFlow() async {
     try {
       String startMessage = '';
-      if(widget.fromServer) {
-        botFlow = await BotParser.loadBotFlowFromServer(jsonFileName);
+      if(isServerLink) {
+        botFlow = await BotParser.loadBotFlowFromServer(widget.jsonFileName);
       }
       else {
-        botFlow = await BotParser.loadBotFlowFromAssets(jsonFileName);
+        botFlow = await BotParser.loadBotFlowFromAssets(widget.jsonFileName);
       }
       if (botFlow != null && botFlow!.containsKey(currentNodeKey)) {
         botType = botFlow?[currentNodeKey]!.type ?? '';
@@ -227,11 +225,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
               ),
             );
           }).toList(),
-
-          // Display the current node (bot options or content)
-          // if (currentNode != null)
-          //   _buildBotNode(currentNode),
-          // if(count == 0)
+          if(currentNode.image != null) _showImage(currentNode),
           _buildBotNode(currentNode),
         ],
       ),
@@ -275,7 +269,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     setState(() {
       messages.add({'type': 'bot', 'text': '...'});
     });
-    await Future.delayed(Duration(milliseconds: 3000));
+    await Future.delayed(const Duration(milliseconds: 3000));
 
     // Navigate to the next node
     if (nextNodeKey != null) {
@@ -299,7 +293,15 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
             messages[messages.length - 1]['text'] = displayedMessage;
           });
         }
-
+        if(currentNode.image != null) {
+          List<String> showImage = [currentNode.image!];
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: CarouselSliderWidget(
+              imageUrls: showImage,
+            ),
+          );
+        }
         // Once the message is fully displayed, show the options for the new node
         setState(() {
           messages[messages.length - 1]['text'] = botMessage;
@@ -322,6 +324,13 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     return result;
   }
 
+  Widget _showImage(BotNode node) {
+    if(!showOptions) {
+      return const SizedBox.shrink();
+    }
+    List<String> images = [node.image!];
+    return CarouselSliderWidget(imageUrls: images);
+  }
   // Build dynamic bot node based on type
   Widget _buildBotNode(BotNode node) {
     if(!showOptions) {
