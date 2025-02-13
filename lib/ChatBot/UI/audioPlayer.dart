@@ -1,12 +1,11 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:wave/config.dart';
-import 'package:wave/wave.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class AudioPlayerWidget extends StatefulWidget {
   final String audioUrl;
+  final String? label;
 
-  const AudioPlayerWidget({required this.audioUrl, Key? key}) : super(key: key);
+  const AudioPlayerWidget({required this.audioUrl, this.label , Key? key}) : super(key: key);
 
   @override
   _AudioPlayerWidgetState createState() => _AudioPlayerWidgetState();
@@ -16,6 +15,8 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool isPlaying = false;
   bool isPaused = false;
+  Duration _duration = Duration.zero;
+  Duration _position = Duration.zero;
 
   @override
   void initState() {
@@ -23,7 +24,20 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     _audioPlayer.onPlayerComplete.listen((event) {
       setState(() {
         isPlaying = false;
-        isPaused = false; // Reset state when audio completes
+        isPaused = false;
+        _position = Duration.zero;
+      });
+    });
+
+    _audioPlayer.onDurationChanged.listen((Duration duration) {
+      setState(() {
+        _duration = duration;
+      });
+    });
+
+    _audioPlayer.onPositionChanged.listen((Duration position) {
+      setState(() {
+        _position = position;
       });
     });
   }
@@ -55,48 +69,59 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     }
   }
 
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$twoDigitMinutes:$twoDigitSeconds";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Check out the below Audio to verify the same issue you are facing"),
-        SizedBox(height: 10,),
+        Text(widget.label ?? ''),
+        SizedBox(height: widget.label != null ? 10 : 0),
         Row(
           children: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                shape: const CircleBorder(side: BorderSide(width: 2.0 , color: Colors.black54) ),
-                elevation: 8, // Add shadow for a more appealing effect
-                padding: const EdgeInsets.all(10), // Ensure consistent padding
+                shape: const CircleBorder(side: BorderSide(width: 2.0, color: Colors.black54)),
+                elevation: 8,
+                padding: const EdgeInsets.all(10),
               ),
               onPressed: _toggleAudio,
               child: Icon(
                 isPlaying ? Icons.pause : Icons.play_arrow,
                 size: 30,
-                color: Colors.black54, // Icon color
+                color: Colors.black54,
               ),
             ),
-            const SizedBox(width: 10), // Add spacing between button and waveform
-            // Waveform Animation
-            if (isPlaying)
-              Expanded(
-                child: WaveWidget(
-                  config: CustomConfig(
-                    gradients: [
-                      [Colors.blue, Colors.lightBlueAccent],
-                      [Colors.lightBlueAccent, Colors.blueAccent],
-                    ],
-                    durations: [35000, 19440],
-                    heightPercentages: [0.2, 0.3],
-                    blur: const MaskFilter.blur(BlurStyle.solid, 10),
-                    gradientBegin: Alignment.bottomLeft,
-                    gradientEnd: Alignment.topRight,
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Slider(
+                    min: 0,
+                    max: _duration.inSeconds.toDouble(),
+                    value: _position.inSeconds.toDouble(),
+                    onChanged: (value) async {
+                      final position = Duration(seconds: value.toInt());
+                      await _audioPlayer.seek(position);
+                    },
                   ),
-                  waveAmplitude: 0,
-                  size: const Size(double.infinity, 50),
-                ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(_formatDuration(_position)),
+                      Text(_formatDuration(_duration - _position)),
+                    ],
+                  ),
+                ],
               ),
+            ),
           ],
         ),
       ],

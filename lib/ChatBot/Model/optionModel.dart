@@ -45,6 +45,7 @@ class Option {
         video: json['video'] as String?,
         recordVideo: json['record_video'] as String?,
         clickPhoto: json['click_photo'] as String?,
+        recordAudio: json['record_audio'] as String?,
         apiCall: (json['apiCall'] as List<dynamic>?)
             ?.map((e) => e as String)
             .toList(),

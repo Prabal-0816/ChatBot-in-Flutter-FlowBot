@@ -81,7 +81,7 @@ class _VideoCaptureWidgetState extends State<VideoCaptureWidget> {
               // Display video thumbnail or player
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: VideoPlayerWidget(videoUrl: _videoFile?.path as String),
+                child: VideoPlayerWidget(videoUrl: _videoFile!.path ),
               ),
 
               Row(

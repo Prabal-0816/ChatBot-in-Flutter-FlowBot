@@ -14,7 +14,8 @@
       {
         "label" : "Diagnose Appliance",
         "value" : "Diagnose Appliance",
-        "nextNode" : null,
+        "audioClip" : "https://cdn.shopify.com/s/files/1/0665/3293/3828/files/cracking.mp3?v=1725880698",
+        "nextNode" : "aage",
         "radioOptionTTs" : "Let's start with your appliance diagnosis"
       },
       {
@@ -24,5 +25,24 @@
         "radioOptionTTs" : "Let's start with your appliance dispose"
       }
     ]
+  },
+  "aage": {
+    "type": "multimedia",
+    "botMessage": "Can you provide some additional information?",
+    "options": [
+      {
+        "record_video": "Record a Video of the appliance while turning it On and Off",
+        "value": "Yes"
+      },
+      {
+        "record_audio": "Record an audio of the appliance while it is working",
+        "value": "Yes"
+      },
+      {
+        "click_photo": "Click Image of the damaged portion",
+        "value": "Yes"
+      }
+    ],
+    "nextNode": "ProductSearchPage"
   }
 }

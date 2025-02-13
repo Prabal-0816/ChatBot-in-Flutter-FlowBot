@@ -43,8 +43,8 @@ dependencies:
   image_picker:
   camera:
   carousel_slider:
-  wave:
   audioplayers:
+  record:
 
 dev_dependencies:
   flutter_test:

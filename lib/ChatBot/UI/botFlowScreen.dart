@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flow_bot_json_driven_chat_bot/ChatBot/UI/audioCapture.dart';
 import 'package:flow_bot_json_driven_chat_bot/ChatBot/UI/videoCapture.dart';
 import 'package:flutter/material.dart';
 import '../APIs/uploadFile.dart';
@@ -47,6 +48,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
   // For multimedia files to be stored
   List<File> capturedImages = [];
   List<File> capturedVideo = [];
+  List<File> capturedAudio = [];
 
   // map in which the url of the captured media will be stored in below format
   // Images : ['url1' , 'url2' , ...] , Video : url , Audio : url ,
@@ -331,6 +333,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     List<String> images = [node.image!];
     return CarouselSliderWidget(imageUrls: images);
   }
+
   // Build dynamic bot node based on type
   Widget _buildBotNode(BotNode node) {
     if(!showOptions) {
@@ -947,6 +950,11 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ImageCaptureWidget(
                     capturedImages: capturedImages),
+              ),
+            if(option.recordAudio != null && option.value == "Yes")
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: AudioCaptureWidget(capturedAudio: capturedAudio),
               )
           ],
         );
@@ -976,6 +984,9 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
         uploadedFiles.putIfAbsent("Video", () => []);
         uploadedFiles["Video"]?.add(videoUrl);
       }
+    }
+    if(capturedAudio.isNotEmpty) {
+      anyFileCaptured = true;
     }
   }
 }
