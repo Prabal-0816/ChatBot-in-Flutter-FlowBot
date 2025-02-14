@@ -79,7 +79,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
       }
       if (botFlow != null && botFlow!.containsKey(currentNodeKey)) {
         botType = botFlow?[currentNodeKey]!.type ?? '';
-        botImage = botFlow?[currentNodeKey]!.image ?? '';
+        botImage = botFlow?[currentNodeKey]!.image?[0] ?? ''; // there will only be one image in the list
         botName = botFlow?[currentNodeKey]!.description ?? '';
         currentNodeKey = botFlow?[currentNodeKey]!.nextNode ?? '';
         startMessage = botFlow?[currentNodeKey]!.botMessage ?? '';
@@ -295,15 +295,15 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
             messages[messages.length - 1]['text'] = displayedMessage;
           });
         }
-        if(currentNode.image != null) {
-          List<String> showImage = [currentNode.image!];
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: CarouselSliderWidget(
-              imageUrls: showImage,
-            ),
-          );
-        }
+        // if(currentNode.image != null) {
+        //   // List<String> showImage = [currentNode.image!];
+        //   Padding(
+        //     padding: const EdgeInsets.only(bottom: 8.0),
+        //     child: CarouselSliderWidget(
+        //       imageUrls: currentNode.image!,
+        //     ),
+        //   );
+        // }
         // Once the message is fully displayed, show the options for the new node
         setState(() {
           messages[messages.length - 1]['text'] = botMessage;
@@ -330,8 +330,8 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     if(!showOptions) {
       return const SizedBox.shrink();
     }
-    List<String> images = [node.image!];
-    return CarouselSliderWidget(imageUrls: images);
+    // List<String> images = node.image!;
+    return CarouselSliderWidget(imageUrls: node.image!);
   }
 
   // Build dynamic bot node based on type

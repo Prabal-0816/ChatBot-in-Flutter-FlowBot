@@ -32,21 +32,21 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   // Initialize video player for Youtube links
   void _initializeVideoPlayer() {
-    _videoController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl),
-        videoPlayerOptions: VideoPlayerOptions(
-          // webOptions:
-        ))
+    _videoController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
       ..initialize().then((_) {
         setState(() {});
-
         // Pause the video by default after it has been initialized
         _videoController?.pause();
+      }).catchError((error) {
+        // Handle initialization error
+        setState(() {
+          _videoController = null;
+        });
       });
 
     // Optionally add listeners for other events (like status change)
     _videoController?.addListener(() {
-      setState(() {
-      });
+      setState(() {});
     });
   }
 
@@ -60,6 +60,12 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           mute: false,
         ),
       );
+    }
+    else {
+      // Handles invalid youtube urls
+      setState(() {
+        isYoutubeVideo = false;   // Fallback to network video player
+      });
     }
   }
 
@@ -86,8 +92,17 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   // Widget to build the Youtube Player
   Widget _buildYoutubePlayer() {
-    if(_youtubeController == null) {
-      return const Center(child: CircularProgressIndicator());
+    if (_youtubeController == null) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 10),
+            Text('Loading YouTube video...'),
+          ],
+        ),
+      );
     }
 
     return YoutubePlayer(
@@ -107,16 +122,15 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       alignment: Alignment.bottomCenter,
       children: [
         AspectRatio(
-          aspectRatio: 2.0,//_videoController!.value.aspectRatio,
+          aspectRatio: _videoController!.value.aspectRatio,
           child: VideoPlayer(_videoController!),
         ),
 
-        Positioned(
-          bottom: 52,
+        Positioned.fill(
           child: IconButton(
             icon: Icon(
               _videoController!.value.isPlaying ? Icons.pause : Icons.play_arrow,
-              color: Colors.white,  // Adjust the color as needed
+              color: Colors.white.withOpacity(0.8),  // Adjust the color as needed
               size: 50.0,  // Adjust the size as needed
             ),
             onPressed: () {
@@ -128,13 +142,31 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
             },
           ),
         ),
-        VideoProgressIndicator(
-          _videoController!,
-          allowScrubbing: true,
-          colors: const VideoProgressColors(
-            playedColor: Colors.blueAccent,
-            bufferedColor: Colors.grey,
-            backgroundColor: Colors.black12,
+
+        // Progress Indicator
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Row(
+            children: [
+              Expanded(
+                child: VideoProgressIndicator(
+                  _videoController!,
+                  allowScrubbing: true,
+                  colors: const VideoProgressColors(
+                    playedColor: Colors.blueAccent,
+                    bufferedColor: Colors.grey,
+                    backgroundColor: Colors.black12,
+                  ),
+                ),
+              ),
+              Text(
+                '${_videoController!.value.position.toString().split('.').first} / '
+                    '${_videoController!.value.duration.toString().split('.').first}',
+                style: const TextStyle(color: Colors.white),
+              ),
+            ],
           ),
         ),
       ],

@@ -6,7 +6,7 @@ class BotNode {
   final String? type;   // type of node(radio , label , checkbox , multimedia , navigate)
   final String? botMessage;   // the message to be shown on UI by the Bot
   final String? description;  // Just used for bot
-  final String? image; // For images from any server
+  final List<String>? image; // image urls, also used for bot image (This is used for common images for all options in any case)
   final String? checkboxOptionTTs;    // the tts will be triggered when the next button of checkbox is clicked
   late final List<Option>? options;   // options of the node
   final String? nextNode;   // mandatory for each checkbox type node, multimedia node
@@ -31,7 +31,9 @@ class BotNode {
       type: json['type'] as String?,
       botMessage: json['botMessage'] as String?,
       description: json['description'] as String?,
-      image: json['image'] as String?,
+      image: (json['image'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       checkboxOptionTTs: json['checkboxOptionTTs'] as String?, // Make sure the JSON field matches
       options: (json['options'] as List?)
           ?.map((option) => Option.fromJson(option as Map<String, dynamic>))

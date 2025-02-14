@@ -29,11 +29,12 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
               carouselController: _carouselController,
               itemCount: widget.imageUrls.length,
               options: CarouselOptions(
-                height: 300, // Adjust height
+                height: MediaQuery.of(context).size.height * 0.3, // Adjust height
                 viewportFraction: 1.0,
                 enableInfiniteScroll: true,
-                autoPlay: true,
+                autoPlay: widget.imageUrls.length > 1 ? true : false,
                 autoPlayInterval: const Duration(seconds: 4),
+                pauseAutoPlayOnTouch: true,
                 enlargeCenterPage: false,
                 onPageChanged: (index, reason) {
                   setState(() {
@@ -49,15 +50,23 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
                   child: Stack(
                     children: [
                       // Main image with rounded corners
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(16.0),
-                        child: Image.network(
-                          widget.imageUrls[index],
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Text('Image not available');
-                          },
+                      Container(
+                        padding: const EdgeInsets.all(8.0), // Add padding here
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16.0), // Rounded corners
+                          child: Image.network(
+                            widget.imageUrls[index],
+                            width: double.infinity,
+                            fit: BoxFit.cover, // Use BoxFit.cover to fill the container
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: Colors.grey[200],
+                                child: const Center(
+                                  child: Icon(Icons.broken_image, color: Colors.grey, size: 48.0),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ],
@@ -67,25 +76,21 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
             ),
             // Dot indicators
             Positioned(
-              bottom: 100,
+              bottom: 16,
               left: 0,
               right: 0,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: widget.imageUrls.asMap().entries.map((entry) {
-                  return GestureDetector(
-                    onTap: () => _carouselController.animateToPage(entry.key),
-                    child: Container(
-                      width: 8.0,
-                      height: 8.0,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 4.0),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _currentCarouselIndex == entry.key
-                            ? Colors.blueAccent
-                            : Colors.grey,
-                      ),
+                  return Container(
+                    width: 8.0,
+                    height: 8.0,
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 4.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _currentCarouselIndex == entry.key ? Colors.blueAccent
+                          : Colors.grey,
                     ),
                   );
                 }).toList(),
@@ -106,13 +111,23 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
           insetPadding: const EdgeInsets.all(10.0),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16.0),
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) {
-                return const Text('Image not available');
-              },
-            ),
+            child: InteractiveViewer(
+              panEnabled: true,
+              minScale: 0.5,
+              maxScale: 2.0,
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error , stackTrace) {
+                  return Container(
+                    color: Colors.grey[200],
+                    child: const Center(
+                      child: Icon(Icons.broken_image , color: Colors.grey, size: 48.0),
+                    ),
+                  );
+                },
+              ),
+            )
           ),
         );
       },

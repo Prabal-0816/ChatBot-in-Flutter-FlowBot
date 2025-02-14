@@ -1,7 +1,7 @@
 {
   "Load Bot" : {
     "type" : "Microwave Diagnosis",
-    "image": "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/botImage.jpg?v=1732178950",
+    "image": ["https://cdn.shopify.com/s/files/1/0704/4228/7358/files/botImage.jpg?v=1732178950"],
     "description" : "Appliance Diagnosis Bot",
     "nextNode" : "greeting"
   },
@@ -9,7 +9,8 @@
   "greeting" : {
     "type" : "radioTypeWithTextOnly",
     "botMessage" : "Can you see this image",
-    "image" : "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/botImage.jpg?v=1732178950",
+    "image" : ["https://cdn.shopify.com/s/files/1/0704/4228/7358/files/botImage.jpg?v=1732178950",
+    "https://cdn.shopify.com/s/files/1/0892/5577/2438/files/waveguide_image.jpg?v=1730876663"],
     "options" : [
       {
         "label" : "Diagnose Appliance",
