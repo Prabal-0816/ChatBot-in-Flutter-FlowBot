@@ -83,11 +83,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      child: isYoutubeVideo
-          ? _buildYoutubePlayer() : _buildNetworkVideoPlayer(),
-    );
+    return isYoutubeVideo ? _buildYoutubePlayer() : _buildNetworkVideoPlayer();
   }
 
   // Widget to build the Youtube Player
@@ -126,20 +122,23 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           child: VideoPlayer(_videoController!),
         ),
 
+        // Play Pause Button
         Positioned.fill(
-          child: IconButton(
-            icon: Icon(
-              _videoController!.value.isPlaying ? Icons.pause : Icons.play_arrow,
-              color: Colors.white.withOpacity(0.8),  // Adjust the color as needed
-              size: 50.0,  // Adjust the size as needed
+          child: Center(
+            child: IconButton(
+              icon: Icon(
+                _videoController!.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                color: Colors.white.withOpacity(0.8),  // Adjust the color as needed
+                size: 50.0,  // Adjust the size as needed
+              ),
+              onPressed: () {
+                setState(() {
+                  _videoController!.value.isPlaying
+                      ? _videoController!.pause()
+                      : _videoController!.play();
+                });
+              },
             ),
-            onPressed: () {
-              setState(() {
-                _videoController!.value.isPlaying
-                    ? _videoController!.pause()
-                    : _videoController!.play();
-              });
-            },
           ),
         ),
 
