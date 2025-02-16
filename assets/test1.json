@@ -1,8 +1,8 @@
 {
   "Load Bot" : {
-    "type" : "Microwave Diagnosis",
+    "type" : "Chat Bot",
     "image": ["https://cdn.shopify.com/s/files/1/0704/4228/7358/files/botImage.jpg?v=1732178950"],
-    "description" : "Appliance Diagnosis Bot",
+    "description" : "Your AI Assistant",
     "nextNode" : "greeting"
   },
 
@@ -13,15 +13,15 @@
     "https://cdn.shopify.com/s/files/1/0892/5577/2438/files/waveguide_image.jpg?v=1730876663"],
     "options" : [
       {
-        "label" : "Diagnose Appliance",
-        "value" : "Diagnose Appliance",
+        "label" : "Yes",
+        "value" : "Yes",
         "audioClip" : "https://cdn.shopify.com/s/files/1/0665/3293/3828/files/cracking.mp3?v=1725880698",
         "nextNode" : "aage",
         "radioOptionTTs" : "Let's start with your appliance diagnosis"
       },
       {
-        "label" : "Dispose Appliance",
-        "value" : "Dispose Appliance",
+        "label" : "No",
+        "value" : "Yes",
         "nextNode" : null,
         "radioOptionTTs" : "Let's start with your appliance dispose"
       }
@@ -32,16 +32,13 @@
     "botMessage": "Can you provide some additional information?",
     "options": [
       {
-        "record_video": "Record a Video of the appliance while turning it On and Off",
-        "value": "Yes"
+        "record_video": "Can you provide a video of you appliance..."
       },
       {
-        "record_audio": "Record an audio of the appliance while it is working",
-        "value": "Yes"
+        "record_audio": "Record an audio of the appliance while it is working"
       },
       {
-        "click_photo": "Click Image of the damaged portion",
-        "value": "Yes"
+        "click_photo": "Click Image of the damaged portion"
       }
     ],
     "nextNode": "ProductSearchPage"

@@ -5,10 +5,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoCaptureWidget extends StatefulWidget {
-  final String label;
   final List<File> capturedVideo;
 
-  VideoCaptureWidget({required this.label , required this.capturedVideo});
+  VideoCaptureWidget({required this.capturedVideo});
 
   @override
   _VideoCaptureWidgetState createState() => _VideoCaptureWidgetState();
@@ -93,17 +92,15 @@ class _VideoCaptureWidgetState extends State<VideoCaptureWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.label),
-        const SizedBox(height: 10),
         if (_videoFile == null)
         // Record Video Button
           Column(
             children: [
               IconButton(
-                icon: const Icon(Icons.videocam , size: 40),
+                icon: const Icon(Icons.videocam_off , size: 40),
                 onPressed: _recordVideo,
               ),
-              const Text('No video recorded yet...')
+              const Text('No video recorded yet...' , style: TextStyle(fontSize: 16 , color: Colors.grey))
             ],
           )
         else

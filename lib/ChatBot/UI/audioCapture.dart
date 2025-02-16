@@ -90,20 +90,17 @@ class _AudioCaptureWidgetState extends State<AudioCaptureWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('data'),
-        const SizedBox(height: 10),
         if(_audiofile == null)
-          Row(
+          Column(
             children: [
               IconButton(
                 icon: Icon(_isRecording ? Icons.stop : Icons.mic, size: 40 ,
                 color: _isRecording && _isRed ? Colors.red : Theme.of(context).iconTheme.color),
-                // _isRecording ?
-                // (_isRed ? Colors.red : Colors.blue.shade400) : ),
                 onPressed: () {
                   !_isRecording ? _startRecording() : _stopRecording();
                 }
               ),
+              const Text('No audio recorded yet...' , style: TextStyle(fontSize: 16 , color: Colors.grey))
             ],
           )
         else

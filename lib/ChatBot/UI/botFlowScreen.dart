@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flow_bot_json_driven_chat_bot/ChatBot/UI/audioCapture.dart';
+import 'package:flow_bot_json_driven_chat_bot/ChatBot/UI/messageBubble.dart';
 import 'package:flow_bot_json_driven_chat_bot/ChatBot/UI/videoCapture.dart';
 import 'package:flutter/material.dart';
 import '../APIs/uploadFile.dart';
@@ -39,7 +40,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
   List<String> selectedOptions = [];
 
   // To store chat messages which will be shown to UI
-  List<Map<String, String>> messages = [];
+  List<Map<String, dynamic>> messages = [];
 
   final ScrollController _scrollController = ScrollController();
   final FlutterTts _flutterTts = FlutterTts();
@@ -59,12 +60,31 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
   void initState() {
     super.initState();
     _loadBotFlow();
+    // _scrollController = ScrollController();
     isServerLink = widget.jsonFileName.contains('.http') || widget.jsonFileName.contains('.com');
 
     // configure TTs
     _flutterTts.setLanguage("en-IN");
     _flutterTts.setPitch(0.8);
     _flutterTts.setSpeechRate(0.5);
+  }
+
+  // @override
+  // void didUpdateWidget(OldWidget oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   _scrollToBottom();
+  // }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
   }
 
   // Load the bot flow data
@@ -90,6 +110,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
           messages.add({
             'type': 'bot',
             'text': '',
+            'timestamp' : DateTime.now()
           });
           _speak(startMessage);
         });
@@ -130,9 +151,9 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
 
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: const Color(0xFFAB2138),
           title: Text(botType, // nodeName
-              style: const TextStyle(color: Colors.white))),
+              style: const TextStyle(color: Colors.white))
+      ),
       body: ListView(
         controller: _scrollController,
         padding: const EdgeInsets.all(8.0),
@@ -144,7 +165,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
               CircleAvatar(
                 radius: 50, // Adjust the size of the avatar
                 backgroundImage: NetworkImage(botImage), // Your bot image path
-                backgroundColor: const Color(0xFFAB2138),
+                backgroundColor: Colors.blue.shade900,
               ),
               const SizedBox(height: 10),
               Text(
@@ -162,68 +183,11 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
             final isBot = message['type'] == 'bot';
             return Align(
               alignment: isBot ? Alignment.centerLeft : Alignment.centerRight,
-              child: Column(
-                children: [
-                  if (isBot) const SizedBox(height: 40),
-                  Stack(
-                    clipBehavior: Clip
-                        .none, // Allows overlapping outside the Stack bounds
-                    children: [
-                      // Message Bubble
-                      Row(
-                        mainAxisAlignment: isBot
-                            ? MainAxisAlignment.start
-                            : MainAxisAlignment.end,
-                        children: [
-                          Flexible(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 19.0, vertical: 10.0),
-                              margin: const EdgeInsets.only(
-                                  top: 10.0), // Small margin for spacing
-                              decoration: BoxDecoration(
-                                color: isBot
-                                    ? Colors.white
-                                    : const Color(0xFFAB2138),
-                                borderRadius: BorderRadius.circular(16),
-                                border: isBot
-                                    ? Border.all(
-                                    color: Colors.black, width: 1.5)
-                                    : null,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black
-                                        .withOpacity(0.2), // Shadow color
-                                    offset: const Offset(
-                                        2, 4), // Offset in X and Y direction
-                                    blurRadius: 4, // Spread of the shadow
-                                    spreadRadius: 1, // Intensity of the shadow
-                                  ),
-                                ],
-                              ),
-                              child: Text(
-                                message['text'] ?? '',
-                                style: TextStyle(
-                                    color:
-                                    isBot ? Colors.black87 : Colors.white),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      // Bot Avatar
-                      if (isBot)
-                        Positioned(
-                          left: -5, // Adjust for horizontal overlap
-                          top: -24, // Adjust for vertical overlap
-                          child: CircleAvatar(
-                            radius: 16,
-                            backgroundImage: NetworkImage(botImage),
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
+              child: MessageBubble(
+                  text: message['text'] ?? '',
+                  isBot: isBot,
+                  botImage: botImage,
+                  timestamp: message['timestamp'] ?? DateTime.now()
               ),
             );
           }).toList(),
@@ -326,6 +290,8 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     return result;
   }
 
+  // For Nodes which have common images in that the images will appear before all the options
+  // Like for radio node 'is this an image of cat or a dog': image with option 'cat' and 'dog'
   Widget _showImage(BotNode node) {
     if(!showOptions) {
       return const SizedBox.shrink();
@@ -587,7 +553,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
         final isSelected = selectedOptions.contains(option.value);
 
         return Padding(
-          padding: const EdgeInsets.only(bottom: 4),
+          padding: const EdgeInsets.only(bottom: 2),
           child: GestureDetector(
             onTap: () {
               setState(() {
@@ -923,7 +889,14 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                         : selectedOptions.add("No Files Uploaded");
                     _onOptionSelected(node.nextNode, node.checkboxOptionTTs);
                   },
-                  child: const Text('Next'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: Colors.blue.shade900,
+                  ),
+                  child: const Text('Next' , style: TextStyle(fontSize: 16 ,color: Colors.white)),
                 ),
               ),
             )
@@ -936,27 +909,74 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
   Widget _buildMultimediaOption(Option option) {
     return StatefulBuilder(
       builder: (context, setState) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (option.recordVideo != null && option.value == "Yes")
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: VideoCaptureWidget(
-                    label: option.recordVideo!, capturedVideo: capturedVideo),
+        return Card(
+          elevation: 8, // Increased elevation for better shadow
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0), // Increased border radius
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.blue.shade50, Colors.white],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-            if (option.clickPhoto != null && option.value == "Yes")
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ImageCaptureWidget(
-                    capturedImages: capturedImages),
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0), // Increased padding
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (option.recordVideo != null)
+                    Column(
+                      children: [
+                        Text(
+                          option.recordVideo!,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue.shade900,
+                          ),
+                        ),
+                        const SizedBox(height: 8), // Added spacing
+                        VideoCaptureWidget(capturedVideo: capturedVideo),
+                      ],
+                    ),
+                  if (option.clickPhoto != null)
+                    Column(
+                      children: [
+                        Text(
+                          option.clickPhoto!,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue.shade900,
+                          ),
+                        ),
+                        const SizedBox(height: 8), // Added spacing
+                        ImageCaptureWidget(capturedImages: capturedVideo),
+                      ],
+                    ),
+                  if (option.recordAudio != null)
+                    Column(
+                      children: [
+                        Text(
+                          option.recordAudio!,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue.shade900,
+                          ),
+                        ),
+                        const SizedBox(height: 8), // Added spacing
+                        AudioCaptureWidget(capturedAudio: capturedVideo),
+                      ],
+                    ),
+                ],
               ),
-            if(option.recordAudio != null && option.value == "Yes")
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: AudioCaptureWidget(capturedAudio: capturedAudio),
-              )
-          ],
+            ),
+          ),
         );
       },
     );
