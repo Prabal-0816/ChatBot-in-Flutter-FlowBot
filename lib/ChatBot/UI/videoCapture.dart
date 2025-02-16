@@ -97,7 +97,8 @@ class _VideoCaptureWidgetState extends State<VideoCaptureWidget> {
           Column(
             children: [
               IconButton(
-                icon: const Icon(Icons.videocam_off , size: 40),
+                color: Colors.black87,
+                icon: Icon(Icons.videocam , size: 40 , color: Colors.blue.shade900,),
                 onPressed: _recordVideo,
               ),
               const Text('No video recorded yet...' , style: TextStyle(fontSize: 16 , color: Colors.grey))

@@ -3,9 +3,8 @@ import 'package:audioplayers/audioplayers.dart';
 
 class AudioPlayerWidget extends StatefulWidget {
   final String audioUrl;
-  final String? label;
 
-  const AudioPlayerWidget({required this.audioUrl, this.label , Key? key}) : super(key: key);
+  const AudioPlayerWidget({required this.audioUrl, Key? key}) : super(key: key);
 
   @override
   _AudioPlayerWidgetState createState() => _AudioPlayerWidgetState();
@@ -81,12 +80,11 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.label ?? ''),
-        SizedBox(height: widget.label != null ? 10 : 0),
         Row(
           children: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
                 shape: const CircleBorder(side: BorderSide(width: 2.0, color: Colors.black54)),
                 elevation: 8,
                 padding: const EdgeInsets.all(10),

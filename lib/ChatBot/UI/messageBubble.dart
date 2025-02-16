@@ -43,9 +43,9 @@ class MessageBubble extends StatelessWidget {
               gradient: LinearGradient(
                 colors: isBot
                     ? [Colors.blue.shade900, Colors.blue.shade700] // Bot message gradient
-                    : [Colors.blue.shade100, Colors.blue.shade50], // New user message color
+                    : [Colors.blue.shade300, Colors.blue.shade50], // New user message color
                 begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                end: Alignment.bottomRight
               ),
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(12),
@@ -54,7 +54,7 @@ class MessageBubble extends StatelessWidget {
                 bottomRight: Radius.circular(isBot ? 12 : 0),
               ),
             ),
-            child: IntrinsicWidth(
+            child: IntrinsicWidth(  // To adjust the message bubble according to the text
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

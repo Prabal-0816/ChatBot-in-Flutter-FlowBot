@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
           // Default app bar theme
           appBarTheme: AppBarTheme(
             backgroundColor: Colors.blue.shade900,
-            titleTextStyle: TextStyle(
+            titleTextStyle: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -27,22 +27,17 @@ class MyApp extends StatelessWidget {
           // Define the default elevated button theme
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
               backgroundColor: Colors.blue.shade900,
-              textStyle: TextStyle(
+              textStyle: const TextStyle(
                 fontSize: 16,
                 color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-
-          // Define the default text theme
-          textTheme: TextTheme(
-            bodyLarge: TextStyle(fontSize: 16, color: Colors.black),
-            bodyMedium: TextStyle(fontSize: 14, color: Colors.black),
           ),
         ),
         home: BotFlowScreen(jsonFileName: 'test1.json'));

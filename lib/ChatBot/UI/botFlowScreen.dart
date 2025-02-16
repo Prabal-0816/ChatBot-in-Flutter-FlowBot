@@ -151,8 +151,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text(botType, // nodeName
-              style: const TextStyle(color: Colors.white))
+          title: Text(botType)  // Bot Type
       ),
       body: ListView(
         controller: _scrollController,
@@ -259,15 +258,6 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
             messages[messages.length - 1]['text'] = displayedMessage;
           });
         }
-        // if(currentNode.image != null) {
-        //   // List<String> showImage = [currentNode.image!];
-        //   Padding(
-        //     padding: const EdgeInsets.only(bottom: 8.0),
-        //     child: CarouselSliderWidget(
-        //       imageUrls: currentNode.image!,
-        //     ),
-        //   );
-        // }
         // Once the message is fully displayed, show the options for the new node
         setState(() {
           messages[messages.length - 1]['text'] = botMessage;
@@ -314,8 +304,8 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
         return _buildRadioNodeWithAttachments(node);
       case 'radioTypeWithTextOnly':
         return _buildRadioNodeWithTextOnly(node);
-      case 'checkboxWithCards':
-        return _buildCheckboxWithCards(node);
+      case 'checkbox':
+        return _buildCheckbox(node);
       case 'checkboxWithPopUp':
         return _buildCheckboxWithPopUp(node);
       case 'multimedia':
@@ -425,20 +415,18 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 15.0, vertical: 8.0),
                         decoration: BoxDecoration(
-                          color: isSelected ? Colors.blueAccent : Colors.white,
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(18.0),
                           border: Border.all(
-                            color: const Color(0xFFAB2138),
-                            // isSelected ? Colors.blueAccent : Colors.grey,
+                            color: Colors.blue.shade900,
                             width: 2.0,
                           ),
                         ),
                         child: Text(
                           option.label ?? 'No Label',
-                          style: const TextStyle(
-                            fontSize: 14.0,
-                            color: Color(0xFFAB2138),
-                            // isSelected ? Colors.white : Colors.black,
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.blue.shade900, // Matches theme
                           ),
                         ),
                       ),
@@ -476,18 +464,16 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                     horizontal: 15.0,
                     vertical: 8.0), // Padding inside the button
                 decoration: BoxDecoration(
-                  color: Colors.white, // Highlight when selected
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(18.0), // Rounded corners
                   border: Border.all(
-                    color: const Color(
-                        0xFFAB2138), // Border color changes on selection
+                    color: Colors.blue.shade900, // Border color changes on selection
                     width: 2.0,
                   ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.2), // Shadow color
-                      offset: const Offset(2, 4),
-                      // Offset in X and Y direction
+                      offset: const Offset(2, 4), // Offset in X and Y direction
                       blurRadius: 4, // Spread of the shadow
                       spreadRadius: 1, // Intensity of the shadow
                     ),
@@ -495,8 +481,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                 ),
                 child: Text(
                   option.label ?? 'No Label',
-                  style: const TextStyle(fontSize: 14.0, color: Colors.black
-                    // Color(0xFFAB2138), // Change text color when selected
+                  style:  TextStyle(fontSize: 16.0, color: Colors.blue.shade900
                   ),
                 ),
               ),
@@ -509,7 +494,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
 
 
 // Build checkbox node (multiple choice)
-  Widget _buildCheckboxWithCards(BotNode node) {
+  Widget _buildCheckbox(BotNode node) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -517,7 +502,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
           const SizedBox(height: 10),
           // Build each checkbox option as a card
           ...node.options!.map((option) {
-            return _buildCheckboxWithCardsOptions(option);
+            return _buildCheckboxOptions(option);
           }).toList(),
           // Display "Next" button if there's a next node available
           if (node.nextNode != null)
@@ -526,18 +511,9 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: ElevatedButton(
-                  onPressed: () => _onOptionSelected(node.nextNode, node.checkboxOptionTTs),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFAB2138),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24.0, vertical: 12.0),
-                  ),
+                  onPressed: () => _onOptionSelected(node.nextNode, node.triggerTTs),
                   child: const Text(
-                    'Next',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        backgroundColor: Color(0xFFAB2138)),
+                    'Next', style: TextStyle(color: Colors.white)
                   ),
                 ),
               ),
@@ -547,13 +523,13 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     );
   }
 
-  Widget _buildCheckboxWithCardsOptions(Option option) {
+  Widget _buildCheckboxOptions(Option option) {
     return StatefulBuilder(
       builder: (context, setState) {
         final isSelected = selectedOptions.contains(option.value);
 
         return Padding(
-          padding: const EdgeInsets.only(bottom: 2),
+          padding: const EdgeInsets.only(bottom: 0),
           child: GestureDetector(
             onTap: () {
               setState(() {
@@ -566,85 +542,95 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
             },
             child: Card(
               elevation: 4,
-              color: Colors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
+                borderRadius: BorderRadius.circular(16.0),
                 side: BorderSide(
-                  color: isSelected ? const Color(0xFFAB2138) : Colors.white,
-                  width: 2,
+                  color: isSelected ? Colors.blue.shade900 : Colors.blue.shade50,
+                  width: 3,
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Checkbox Icon with Label and Description
-                    Row(
-                      children: [
-                        Icon(
-                          isSelected ? Icons.check_circle : Icons.check_circle,
-                          color: isSelected
-                              ? const Color(0xFFAB2138)
-                              : Colors.grey.shade300,
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                option.label ?? 'No Label',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black54,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              if (option.description != null &&
-                                  option.description!.isNotEmpty)
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [Colors.blue.shade50, Colors.white],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(       // Checkbox Icon with Label and Description
+                            Icons.check_circle,
+                            color: isSelected
+                                ? Colors.blue.shade900
+                                : Colors.grey.shade300,
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
                                 Text(
-                                  option.description!,
+                                  option.label ?? 'No Label',
                                   style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.black87,
-                                    fontSize: 14,
+                                    fontSize: 16,
                                   ),
                                 ),
-                            ],
+                                if (option.description != null &&
+                                    option.description!.isNotEmpty)
+                                  const SizedBox(height: 4),
+                                if (option.description != null &&
+                                    option.description!.isNotEmpty)
+                                  Text(
+                                    option.description!,
+                                    style: const TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    // Multimedia Section
-                    if ((option.images != null && option.images!.isNotEmpty) ||
-                        option.audioClip != null ||
-                        option.video != null)
-                      Column(
-                        children: [
-                          if (option.images != null &&
-                              option.images!.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: CarouselSliderWidget(
-                                imageUrls: option.images!
-                              ),
-                            ),
-                          if (option.audioClip != null)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: AudioPlayerWidget(
-                                  audioUrl: option.audioClip!),
-                            ),
-                          if (option.video != null)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: VideoPlayerWidget(videoUrl: option.video!),
-                            ),
                         ],
                       ),
-                  ],
+                      // Multimedia Section
+                      if ((option.images != null && option.images!.isNotEmpty) ||
+                          option.audioClip != null ||
+                          option.video != null)
+                        const SizedBox(height: 12),
+                        Column(
+                          children: [
+                            if (option.images != null &&
+                                option.images!.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: CarouselSliderWidget(
+                                  imageUrls: option.images!
+                                ),
+                              ),
+                            if (option.audioClip != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: AudioPlayerWidget(
+                                    audioUrl: option.audioClip!),
+                              ),
+                            if (option.video != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: VideoPlayerWidget(videoUrl: option.video!),
+                              ),
+                          ],
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -673,19 +659,8 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: ElevatedButton(
-                  onPressed: () => _onOptionSelected(node.nextNode, node.checkboxOptionTTs),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFAB2138),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24.0, vertical: 12.0),
-                  ),
-                  child: const Text(
-                    'Next',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        backgroundColor: Color(0xFFAB2138)),
-                  ),
+                  onPressed: () => _onOptionSelected(node.nextNode, node.triggerTTs),
+                  child:  const Text('Next' , style: TextStyle(color: Colors.white))
                 ),
               ),
             ),
@@ -715,145 +690,157 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
               elevation: 4,
               color: Colors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
+                borderRadius: BorderRadius.circular(16.0),
                 side: BorderSide(
-                  color: isSelected ? const Color(0xFFAB2138) : Colors.white,
-                  width: 2,
+                  color: isSelected ? Colors.blue.shade900 : Colors.blue.shade50,
+                  width: 3,
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Checkbox Icon with Label and Description
-                    Row(
-                      children: [
-                        Icon(
-                          isSelected ? Icons.check_circle : Icons.check_circle,
-                          color: isSelected
-                              ? const Color(0xFFAB2138)
-                              : Colors.grey.shade300,
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                option.label ?? 'No Label',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black54,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                            ],
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [Colors.blue.shade50, Colors.white],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16.0)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Checkbox Icon with Label and Description
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.check_circle,
+                            color: isSelected
+                                ? Colors.blue.shade900
+                                : Colors.grey.shade300,
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    // Multimedia Section
-                    if ((option.images != null && option.images!.isNotEmpty) ||
-                        option.audioClip != null ||
-                        option.video != null)
-                      GestureDetector(
-                        onTap: () => showDialog(
-                          context: context,
-                          builder: (context) {
-                            return Dialog(
-                              backgroundColor: Colors
-                                  .transparent, // Make background transparent
-                              child: Stack(
-                                children: [
-                                  // Full-Screen Popup Content
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 16.0, vertical: 24.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    child: SingleChildScrollView(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          // Description
-                                          Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Text(
-                                              option.description ??
-                                                  'No description available.',
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.black54,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 20),
-
-                                          // Multimedia Content
-                                          if (option.images != null &&
-                                              option.images!.isNotEmpty)
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 8.0),
-                                              child: CarouselSliderWidget(
-                                                imageUrls: option.images!
-                                              ),
-                                            ),
-                                          if (option.audioClip != null)
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 16.0),
-                                              child: AudioPlayerWidget(
-                                                  audioUrl: option.audioClip!),
-                                            ),
-                                          if (option.video != null)
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 16.0),
-                                              child: VideoPlayerWidget(
-                                                  videoUrl: option.video!),
-                                            ),
-                                        ],
-                                      ),
-                                    ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  option.label ?? 'No Label',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                    fontSize: 16,
                                   ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      if ((option.images != null && option.images!.isNotEmpty) ||
+                          option.audioClip != null ||
+                          option.video != null)
+                      const SizedBox(height: 12),
+                      // Multimedia Section
+                      if ((option.images != null && option.images!.isNotEmpty) ||
+                          option.audioClip != null ||
+                          option.video != null)
+                        GestureDetector(
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Dialog(
+                                backgroundColor: Colors
+                                    .transparent, // Make background transparent
+                                child: Stack(
+                                  children: [
+                                    // Full-Screen Popup Content
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 16.0, vertical: 24.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(12.0),
+                                      ),
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            // Description
+                                            Padding(
+                                              padding: const EdgeInsets.all(16.0),
+                                              child: Text(
+                                                option.description ??
+                                                    'No description available.',
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black54,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 20),
 
-                                  // Close Button
-                                  Positioned(
-                                    top: 10,
-                                    right: 0,
-                                    child: GestureDetector(
-                                      onTap: () => Navigator.of(context).pop(),
-                                      child: const CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        child: Icon(
-                                          Icons.close,
-                                          color: Color(0xFFAB2138),
+                                            // Multimedia Content
+                                            if (option.images != null &&
+                                                option.images!.isNotEmpty)
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 8.0),
+                                                child: CarouselSliderWidget(
+                                                  imageUrls: option.images!
+                                                ),
+                                              ),
+                                            if (option.audioClip != null)
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 16.0),
+                                                child: AudioPlayerWidget(
+                                                    audioUrl: option.audioClip!),
+                                              ),
+                                            if (option.video != null)
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 16.0),
+                                                child: VideoPlayerWidget(
+                                                    videoUrl: option.video!),
+                                              ),
+                                          ],
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                        child: const Text(
-                          'View More>',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
+
+                                    // Close Button
+                                    Positioned(
+                                      top: 10,
+                                      right: 0,
+                                      child: GestureDetector(
+                                        onTap: () => Navigator.of(context).pop(),
+                                        child: const CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          child: Icon(
+                                            Icons.close,
+                                            color: Color(0xFFAB2138),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                          child: const Text(
+                            'View More>',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -887,19 +874,14 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                     anyFileCaptured == true
                         ? selectedOptions.add("File upload Successfully")
                         : selectedOptions.add("No Files Uploaded");
-                    _onOptionSelected(node.nextNode, node.checkboxOptionTTs);
+                    String tts = anyFileCaptured == true ? 'Files have been successfully uploaded'
+                        : 'No files uploaded';
+                    _onOptionSelected(node.nextNode, tts);
                   },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    backgroundColor: Colors.blue.shade900,
-                  ),
-                  child: const Text('Next' , style: TextStyle(fontSize: 16 ,color: Colors.white)),
+                  child: const Text('Next' ,style: TextStyle(color: Colors.white))
                 ),
               ),
-            )
+            ),
         ],
       ),
     );
@@ -916,6 +898,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
           ),
           child: Container(
             decoration: BoxDecoration(
+              // color: Colors.blue.shade50,
               gradient: LinearGradient(
                 colors: [Colors.blue.shade50, Colors.white],
                 begin: Alignment.topLeft,
@@ -933,10 +916,10 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                       children: [
                         Text(
                           option.recordVideo!,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue.shade900,
+                            color: Colors.black87       //Colors.blue.shade900,
                           ),
                         ),
                         const SizedBox(height: 8), // Added spacing
@@ -951,7 +934,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue.shade900,
+                            color: Colors.black87,
                           ),
                         ),
                         const SizedBox(height: 8), // Added spacing
@@ -966,7 +949,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue.shade900,
+                            color: Colors.black87,
                           ),
                         ),
                         const SizedBox(height: 8), // Added spacing

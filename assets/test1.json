@@ -16,16 +16,51 @@
         "label" : "Yes",
         "value" : "Yes",
         "audioClip" : "https://cdn.shopify.com/s/files/1/0665/3293/3828/files/cracking.mp3?v=1725880698",
-        "nextNode" : "aage",
+        "nextNode" : "checkbox",
         "radioOptionTTs" : "Let's start with your appliance diagnosis"
       },
       {
         "label" : "No",
         "value" : "Yes",
-        "nextNode" : null,
+        "nextNode" : "checkbox",
         "radioOptionTTs" : "Let's start with your appliance dispose"
       }
     ]
+  },
+  "checkbox" : {
+    "type": "checkbox",
+    "botMessage": "What are you observations?",
+    "options": [
+      {
+        "label" : "Strong Burning Smell",
+        "description" : "if you can feel a burning smell which might be due to small short circuits inside",
+        "value" : "Strong burning smell"
+      },
+      {
+        "label" : "Flickering Light",
+        "value" : "Flickering light",
+        "video" : "https://www.youtube.com/watch?v=i5kLjE2Dhw0",
+        "description" : "Light inside the microwave turning on and off continuously"
+      },
+      {
+        "label" : "No Heating",
+        "value" : "No heating"
+      },
+      {
+        "label" : "Damage or Discoloration on the waveguide cover",
+        "value" : "Damage or discoloration on the waveguide cover",
+        "images" : ["https://cdn.shopify.com/s/files/1/0892/5577/2438/files/waveguide_image.jpg?v=1730876663",
+          "https://cdn.shopify.com/s/files/1/0892/5577/2438/files/burnt_waveguide2.jpg?v=1730876725",
+          "https://cdn.shopify.com/s/files/1/0892/5577/2438/files/burnt_waveguide3.jpg?v=1730876768"]
+      },
+      {
+        "label" : "Can you hear a loud buzzing sound",
+        "audioClip" : "https://cdn.shopify.com/s/files/1/0665/3293/3828/files/cracking.mp3?v=1725880698",
+        "value" : "loud buzzing sound"
+      }
+    ],
+    "triggerTTs" : "Okay let's proceed more",
+    "nextNode" : "aage"
   },
   "aage": {
     "type": "multimedia",
@@ -41,6 +76,11 @@
         "click_photo": "Click Image of the damaged portion"
       }
     ],
-    "nextNode": "ProductSearchPage"
+    "nextNode": "label node"
+  },
+  "label node": {
+    "type": "label",
+    "botMessage": "You have entered in the label node",
+    "nextNode": null
   }
 }

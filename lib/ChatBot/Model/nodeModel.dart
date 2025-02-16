@@ -7,7 +7,7 @@ class BotNode {
   final String? botMessage;   // the message to be shown on UI by the Bot
   final String? description;  // Just used for bot
   final List<String>? image; // image urls, also used for bot image (This is used for common images for all options in any case)
-  final String? checkboxOptionTTs;    // the tts will be triggered when the next button of checkbox is clicked
+  final String? triggerTTs;    // the tts will be triggered when the next button of checkbox is clicked
   late final List<Option>? options;   // options of the node
   final String? nextNode;   // mandatory for each checkbox type node, multimedia node
 
@@ -18,7 +18,7 @@ class BotNode {
     this.botMessage,
     this.description,
     this.image,
-    this.checkboxOptionTTs,
+    this.triggerTTs,
     this.options,
     this.nextNode,
   });
@@ -34,7 +34,7 @@ class BotNode {
       image: (json['image'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-      checkboxOptionTTs: json['checkboxOptionTTs'] as String?, // Make sure the JSON field matches
+      triggerTTs: json['triggerTTs'] as String?, // Make sure the JSON field matches
       options: (json['options'] as List?)
           ?.map((option) => Option.fromJson(option as Map<String, dynamic>))
           .toList(),
