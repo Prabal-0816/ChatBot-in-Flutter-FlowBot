@@ -208,7 +208,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     setState(() {
       showOptions = false;
       for (String options in selectedOptions) {
-        messages.add({'type': 'user', 'text': options});
+        messages.add({'type': 'user', 'text': options , 'timestamp': DateTime.now()});
       }
 
       // Add intent and options in intentAnswer
