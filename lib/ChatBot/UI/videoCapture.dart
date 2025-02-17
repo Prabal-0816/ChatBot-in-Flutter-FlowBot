@@ -94,15 +94,33 @@ class _VideoCaptureWidgetState extends State<VideoCaptureWidget> {
       children: [
         if (_videoFile == null)
         // Record Video Button
-          Column(
-            children: [
-              IconButton(
-                color: Colors.black87,
-                icon: Icon(Icons.videocam , size: 40 , color: Colors.blue.shade900,),
-                onPressed: _recordVideo,
+          ElevatedButton(
+            onPressed: _recordVideo,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue.shade50, // Light blue background
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12), // Rounded corners
               ),
-              const Text('No video recorded yet...' , style: TextStyle(fontSize: 16 , color: Colors.grey))
-            ],
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), // Add padding
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.videocam_outlined,
+                  size: 30,
+                  color: Colors.blue.shade900,
+                ),
+                const SizedBox(width: 8), // Spacing between icon and text
+                Text(
+                  'Record Video',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blue.shade900,
+                  ),
+                ),
+              ],
+            ),
           )
         else
           Column(
