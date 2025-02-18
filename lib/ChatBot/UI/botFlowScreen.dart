@@ -567,6 +567,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                         children: [
                           Icon(       // Checkbox Icon with Label and Description
                             Icons.check_circle,
+                            size: 30,
                             color: isSelected
                                 ? Colors.blue.shade900
                                 : Colors.grey.shade300,
@@ -715,6 +716,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                         children: [
                           Icon(
                             Icons.check_circle,
+                            size: 30,
                             color: isSelected
                                 ? Colors.blue.shade900
                                 : Colors.grey.shade300,

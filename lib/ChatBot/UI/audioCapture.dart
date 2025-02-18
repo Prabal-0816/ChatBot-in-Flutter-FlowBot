@@ -92,7 +92,7 @@ class _AudioCaptureWidgetState extends State<AudioCaptureWidget> {
       children: [
         if(_audiofile == null)
           ElevatedButton(
-              onPressed: _isRecording ? _startRecording : _stopRecording,
+              onPressed: !_isRecording ? _startRecording : _stopRecording,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue.shade50, // Light blue background
                 shape: RoundedRectangleBorder(
@@ -106,11 +106,12 @@ class _AudioCaptureWidgetState extends State<AudioCaptureWidget> {
                   Icon(
                       _isRecording ? Icons.stop : Icons.mic,
                     size: 30,
-                    color: Colors.blue.shade900
+                    color: _isRecording && _isRed ? Colors.red : Colors.blue.shade900
                   ),
                   const SizedBox(width: 8), // Spacing between icon and text
                   Text(
-                    'Click To Record Audio',
+                    _isRecording ?
+                    'Click To Pause' : 'Click To Record Audio',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.blue.shade900,
