@@ -91,17 +91,33 @@ class _AudioCaptureWidgetState extends State<AudioCaptureWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if(_audiofile == null)
-          Column(
-            children: [
-              IconButton(
-                icon: Icon(_isRecording ? Icons.stop : Icons.mic, size: 40 ,
-                color: _isRecording && _isRed ? Colors.red : Theme.of(context).iconTheme.color),
-                onPressed: () {
-                  !_isRecording ? _startRecording() : _stopRecording();
-                }
+          ElevatedButton(
+              onPressed: _isRecording ? _startRecording : _stopRecording,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue.shade50, // Light blue background
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50), // Rounded corners
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12), // Add padding
               ),
-              const Text('No audio recorded yet...' , style: TextStyle(fontSize: 16 , color: Colors.grey))
-            ],
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                      _isRecording ? Icons.stop : Icons.mic,
+                    size: 30,
+                    color: Colors.blue.shade900
+                  ),
+                  const SizedBox(width: 8), // Spacing between icon and text
+                  Text(
+                    'Click To Record Audio',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.blue.shade900,
+                    ),
+                  ),
+                ],
+              )
           )
         else
           Column(

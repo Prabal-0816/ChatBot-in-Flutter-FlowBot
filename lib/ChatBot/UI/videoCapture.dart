@@ -99,9 +99,9 @@ class _VideoCaptureWidgetState extends State<VideoCaptureWidget> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue.shade50, // Light blue background
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12), // Rounded corners
+                borderRadius: BorderRadius.circular(50), // Rounded corners
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), // Add padding
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12), // Add padding
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -113,7 +113,7 @@ class _VideoCaptureWidgetState extends State<VideoCaptureWidget> {
                 ),
                 const SizedBox(width: 8), // Spacing between icon and text
                 Text(
-                  'Record Video',
+                  'Click To Record Video',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.blue.shade900,

@@ -55,14 +55,40 @@ class _ImageCaptureWidgetState extends State<ImageCaptureWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        ElevatedButton(
+            onPressed: _captureImage,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue.shade50, // Light blue background
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50), // Rounded corners
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12), // Add padding
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                      Icons.camera_alt,
+                      size: 30,
+                      color: Colors.blue.shade900
+                  ),
+                  const SizedBox(width: 8), // Spacing between icon and text
+                  Text(
+                    'Click To Capture Images',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.blue.shade900,
+                    ),
+                  ),
+                ]
+            )
+        ),
+        if (widget.capturedImages.isNotEmpty)
+          const SizedBox(height: 8),
         Row(
           children: [
-            IconButton(
-              icon: const Icon(Icons.camera , size: 40),
-              onPressed: _captureImage, // Capture photo on button click
-            ),
             if (widget.capturedImages.isNotEmpty)
               Expanded(
                 child: SizedBox(
@@ -98,8 +124,6 @@ class _ImageCaptureWidgetState extends State<ImageCaptureWidget> {
               ),
           ],
         ),
-        if (widget.capturedImages.isEmpty)
-          const Text('No images captured yet.'),
       ],
     );
   }

@@ -913,47 +913,58 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                 children: [
                   if (option.recordVideo != null)
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           option.recordVideo!,
                           style: const TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87       //Colors.blue.shade900,
+                            // fontWeight: FontWeight.bold,
+                            color: Colors.black
                           ),
                         ),
                         const SizedBox(height: 8), // Added spacing
-                        VideoCaptureWidget(capturedVideo: capturedVideo),
+                        Center(
+                            child: VideoCaptureWidget(capturedVideo: capturedVideo)
+                        ),
                       ],
                     ),
                   if (option.clickPhoto != null)
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           option.clickPhoto!,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            // fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
                         ),
                         const SizedBox(height: 8), // Added spacing
-                        ImageCaptureWidget(capturedImages: capturedVideo),
+                        Center(
+                            child: ImageCaptureWidget(capturedImages: capturedVideo)
+                        ),
+
                       ],
                     ),
                   if (option.recordAudio != null)
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           option.recordAudio!,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            // fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
                         ),
                         const SizedBox(height: 8), // Added spacing
-                        AudioCaptureWidget(capturedAudio: capturedVideo),
+                        Center(
+                            child: AudioCaptureWidget(capturedAudio: capturedVideo)
+                        ),
+
                       ],
                     ),
                 ],
