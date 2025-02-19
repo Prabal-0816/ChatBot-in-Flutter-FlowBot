@@ -42,7 +42,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
   // To store chat messages which will be shown to UI
   List<Map<String, dynamic>> messages = [];
 
-  final ScrollController _scrollController = ScrollController();
+  late ScrollController _scrollController;
   final FlutterTts _flutterTts = FlutterTts();
   bool showOptions = false;  // Will be used when to show the options and when to hide on the UI
 
@@ -59,6 +59,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
     _loadBotFlow();
     // _scrollController = ScrollController();
     isServerLink = widget.jsonFileName.contains('.http') || widget.jsonFileName.contains('.com');
@@ -69,11 +70,11 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     _flutterTts.setSpeechRate(0.5);
   }
 
-  // @override
-  // void didUpdateWidget(OldWidget oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   _scrollToBottom();
-  // }
+  @override
+  void didUpdateWidget(covariant BotFlowScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _scrollToBottom();
+  }
 
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -232,7 +233,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     }
 
     setState(() {
-      messages.add({'type': 'bot', 'text': '...'});
+      messages.add({'type': 'bot', 'text': '...', 'timestamp': DateTime.now()});
     });
     await Future.delayed(const Duration(milliseconds: 3000));
 
@@ -947,7 +948,6 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                         Center(
                             child: ImageCaptureWidget(capturedImages: capturedVideo)
                         ),
-
                       ],
                     ),
                   if (option.recordAudio != null)
@@ -966,7 +966,6 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                         Center(
                             child: AudioCaptureWidget(capturedAudio: capturedVideo)
                         ),
-
                       ],
                     ),
                 ],
