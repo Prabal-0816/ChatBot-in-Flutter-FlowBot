@@ -214,14 +214,6 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
               timestamp: message['timestamp'] ?? DateTime.now(),
             );
           }).toList(),
-          if(messages.isNotEmpty && messages.last['type'] == 'bot' && messages.last['text'] == '')
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                child: ThinkingAnimation(),
-              ),
-            ),
           if(currentNode.image != null) _showImage(currentNode),
           _buildBotNode(currentNode),
         ],
@@ -266,20 +258,13 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
       _speak(optionAudio);
     }
 
-    // setState(() {
-    //   messages.add({
-    //     'type': 'bot',
-    //     'text': '',
-    //     'timestamp': DateTime.now()
-    //   });
-    // });
-
-    messages.add({
-      'type': 'bot',
-      'text': '',
-      'timestamp': DateTime.now()
+    setState(() {
+      messages.add({
+        'type': 'bot',
+        'text': '',
+        'timestamp': DateTime.now()
+      });
     });
-
 
     await Future.delayed(const Duration(milliseconds: 3000));
 

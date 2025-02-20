@@ -35,13 +35,13 @@ class _ThinkingAnimationState extends State<ThinkingAnimation>
       children: List.generate(3, (index) {
         return FadeTransition(
           opacity: _animation,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2),
+          child: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 2),
             child: Text(
               '.',
               style: TextStyle(
                 fontSize: 24,
-                color: Colors.grey.shade600,
+                color: Colors.white,
               ),
             ),
           ),

@@ -1,3 +1,4 @@
+import 'package:flow_bot_json_driven_chat_bot/ChatBot/UI/thinkingAnimation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -67,7 +68,10 @@ class MessageBubble extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  if(isBot && text.isEmpty)
+                    const ThinkingAnimation(),
+                  if(text.isNotEmpty)
+                    Text(
                     text,
                     style: TextStyle(
                       color: isBot ? Colors.white : Colors.black87,
