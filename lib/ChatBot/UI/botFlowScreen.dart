@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flow_bot_json_driven_chat_bot/ChatBot/UI/animatedMessageBubble.dart';
 import 'package:flow_bot_json_driven_chat_bot/ChatBot/UI/audioCapture.dart';
 import 'package:flow_bot_json_driven_chat_bot/ChatBot/UI/messageBubble.dart';
+import 'package:flow_bot_json_driven_chat_bot/ChatBot/UI/thinkingAnimation.dart';
 import 'package:flow_bot_json_driven_chat_bot/ChatBot/UI/videoCapture.dart';
 import 'package:flutter/material.dart';
 import '../APIs/uploadFile.dart';
@@ -70,12 +72,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     _flutterTts.setSpeechRate(0.5);
   }
 
-  @override
-  void didUpdateWidget(covariant BotFlowScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _scrollToBottom();
-  }
-
+  // Use in case the options are less than the screen size
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
@@ -85,6 +82,43 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
           curve: Curves.easeOut,
         );
       }
+    });
+  }
+
+  // Use in case the options occupy more space than the screen
+  void _scrollToMessage() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        final double offset = _scrollController.position.maxScrollExtent / 3; // Adjust as needed
+        _scrollController.animateTo(
+          offset,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  Future<void> _displayBotMessage(String message) async {
+    List<String> words = message.split(' ');
+    String displayedMessage = '';
+
+    // Start the speaking task and typing animation
+    _speak(message);
+
+    for(String word in words){
+      await Future.delayed(const Duration(milliseconds: 200));
+      displayedMessage += '$word ';
+      setState(() {
+        messages[messages.length - 1]['text'] = displayedMessage;
+      });
+    }
+
+    // Once the message is fully displayed, show the options for the current node
+    setState(() {
+      messages[messages.length - 1]['text'] = message;
+      showOptions = true;
+      _scrollToBottom();
     });
   }
 
@@ -104,25 +138,17 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
         botName = botFlow?[currentNodeKey]!.description ?? '';
         currentNodeKey = botFlow?[currentNodeKey]!.nextNode ?? '';
         startMessage = botFlow?[currentNodeKey]!.botMessage ?? '';
-        List<String> words = startMessage.split(' ');
-        String displayedMessage = '';
 
         setState(() {
           messages.add({
             'type': 'bot',
-            'text': '',
+            'text': '...',
             'timestamp' : DateTime.now()
           });
           _speak(startMessage);
         });
-        for(String word in words) {
-          await Future.delayed(const Duration(milliseconds: 200));
-          displayedMessage += '$word ';
-          setState(() {
-            messages[messages.length - 1]['text'] = displayedMessage;
-          });
-        }
-        showOptions = true;
+
+        _displayBotMessage(startMessage);   // Displaying the start message
       } else {
         print(
             "Error: Bot flow data is not available or does not contain the key '$currentNodeKey'.");
@@ -181,16 +207,21 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
           // Show messages (from the bot and user)
           ...messages.map((message) {
             final isBot = message['type'] == 'bot';
-            return Align(
-              alignment: isBot ? Alignment.centerLeft : Alignment.centerRight,
-              child: MessageBubble(
-                  text: message['text'] ?? '',
-                  isBot: isBot,
-                  botImage: botImage,
-                  timestamp: message['timestamp'] ?? DateTime.now()
-              ),
+            return MessageBubble(
+              text: message['text'] ?? '',
+              isBot: isBot,
+              botImage: botImage,
+              timestamp: message['timestamp'] ?? DateTime.now(),
             );
           }).toList(),
+          if(messages.isNotEmpty && messages.last['type'] == 'bot' && messages.last['text'] == '')
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                child: ThinkingAnimation(),
+              ),
+            ),
           if(currentNode.image != null) _showImage(currentNode),
           _buildBotNode(currentNode),
         ],
@@ -208,7 +239,10 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     setState(() {
       showOptions = false;
       for (String options in selectedOptions) {
-        messages.add({'type': 'user', 'text': options , 'timestamp': DateTime.now()});
+        messages.add({'type': 'user',
+          'text': options ,
+          'timestamp': DateTime.now()
+        });
       }
 
       // Add intent and options in intentAnswer
@@ -232,9 +266,21 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
       _speak(optionAudio);
     }
 
-    setState(() {
-      messages.add({'type': 'bot', 'text': '...', 'timestamp': DateTime.now()});
+    // setState(() {
+    //   messages.add({
+    //     'type': 'bot',
+    //     'text': '',
+    //     'timestamp': DateTime.now()
+    //   });
+    // });
+
+    messages.add({
+      'type': 'bot',
+      'text': '',
+      'timestamp': DateTime.now()
     });
+
+
     await Future.delayed(const Duration(milliseconds: 3000));
 
     // Navigate to the next node
@@ -244,26 +290,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
 
       if (currentNode != null) {
         String botMessage = currentNode.botMessage ?? '';
-
-        // Display bot message word by word
-        List<String> words = botMessage.split(' ');
-        String displayedMessage = '';
-
-        // Start the speaking task and typing animation
-        _speak(botMessage);
-
-        for(String word in words) {
-          await Future.delayed(const Duration(milliseconds: 200));
-          displayedMessage += '$word ';
-          setState(() {
-            messages[messages.length - 1]['text'] = displayedMessage;
-          });
-        }
-        // Once the message is fully displayed, show the options for the new node
-        setState(() {
-          messages[messages.length - 1]['text'] = botMessage;
-          showOptions = true;
-        });
+        await _displayBotMessage(botMessage);
       }
     }
   }

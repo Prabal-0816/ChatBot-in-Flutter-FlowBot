@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class MessageBubble extends StatelessWidget {
   final String text;
@@ -53,6 +54,14 @@ class MessageBubble extends StatelessWidget {
                 bottomLeft: Radius.circular(isBot ? 0 : 12),
                 bottomRight: Radius.circular(isBot ? 12 : 0),
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  offset: const Offset(2, 4),
+                  blurRadius: 4,
+                  spreadRadius: 1
+                )
+              ]
             ),
             child: IntrinsicWidth(  // To adjust the message bubble according to the text
               child: Column(
@@ -69,7 +78,7 @@ class MessageBubble extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomRight,
                     child: Text(
-                      '${timestamp.hour}:${timestamp.minute}',
+                      DateFormat('hh:mm a').format(timestamp),
                       style: TextStyle(
                         color: isBot ? Colors.white70 : Colors.black54,
                         fontSize: 12,
