@@ -189,6 +189,15 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
             children: [
               const SizedBox(height: 20),
               CircleAvatar(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50.0),
+                    border: Border.all(
+                      color: Colors.blue.shade900,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
                 radius: 50, // Adjust the size of the avatar
                 backgroundImage: NetworkImage(botImage), // Your bot image path
                 backgroundColor: Colors.blue.shade900,
