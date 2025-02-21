@@ -15,6 +15,7 @@ import 'VideoPlayer.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'audioPlayer.dart';
 import 'imageCapture.dart';
+import 'multimediaPage.dart';
 
 class BotFlowScreen extends StatefulWidget {
   final String jsonFileName;
@@ -63,7 +64,6 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     super.initState();
     _scrollController = ScrollController();
     _loadBotFlow();
-    // _scrollController = ScrollController();
     isServerLink = widget.jsonFileName.contains('.http') || widget.jsonFileName.contains('.com');
 
     // configure TTs
@@ -114,6 +114,10 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
       });
     }
 
+    _scrollToBottom();
+
+    await Future.delayed(const Duration(seconds: 1));
+
     // Once the message is fully displayed, show the options for the current node
     setState(() {
       messages[messages.length - 1]['text'] = message;
@@ -142,7 +146,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
         setState(() {
           messages.add({
             'type': 'bot',
-            'text': '...',
+            'text': '',
             'timestamp' : DateTime.now()
           });
           _speak(startMessage);
@@ -240,10 +244,12 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     setState(() {
       showOptions = false;
       for (String options in selectedOptions) {
-        messages.add({'type': 'user',
-          'text': options ,
+        messages.add({
+          'type': 'user',
+          'text': options,
           'timestamp': DateTime.now()
         });
+        _scrollToBottom();
       }
 
       // Add intent and options in intentAnswer
@@ -262,8 +268,9 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
       selectedOptions = [];
     });
 
-
+    int len = 0;
     if ((optionAudio != null && optionAudio != '')) {
+      len = optionAudio.length;
       _speak(optionAudio);
     }
 
@@ -275,7 +282,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
       });
     });
 
-    await Future.delayed(const Duration(milliseconds: 3000));
+    await Future.delayed(Duration(milliseconds: len == 0 ? 1500 : len * 100));
 
     // Navigate to the next node
     if (nextNodeKey != null) {
@@ -322,14 +329,18 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
         return _buildNavigatorNode(node);
       case 'label':
         return _buildLabelNode(node);
+      case 'labelWithNext':
+        return _buildLabelNodeWithNext(node);
       case 'radioTypeWithAttachments':
         return _buildRadioNodeWithAttachments(node);
       case 'radioTypeWithTextOnly':
         return _buildRadioNodeWithTextOnly(node);
       case 'checkbox':
         return _buildCheckbox(node);
-      case 'checkboxWithPopUp':
-        return _buildCheckboxWithPopUp(node);
+      case 'checkboxInRowView':
+        return _buildCheckboxRowView(node);
+      case 'checkboxInGridView':
+        return _buildCheckboxGridView(node);
       case 'multimedia':
         return _buildMultiMediaNode(node);
       default:
@@ -358,14 +369,33 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
 
   // Build label node (simple text)
   Widget _buildLabelNode(BotNode node) {
+    if(node.nextNode != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _onOptionSelected(node.nextNode, node.triggerTTs); // Automatically call _onOptionSelected
+      });
+    }
+
+    return const SizedBox.shrink(); // No UI needed for label node
+  }
+
+  // label node with next button
+  Widget _buildLabelNodeWithNext(BotNode node) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         if (node.nextNode != null)
-          ElevatedButton(
-            onPressed: () => _onOptionSelected(node.nextNode, ''),
-            child: const Text('Next'),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: ElevatedButton(
+                onPressed: () => _onOptionSelected(node.nextNode, node.triggerTTs),
+                child: const Text(
+                    'Next', style: TextStyle(color: Colors.white)
+                ),
+              ),
+            ),
           ),
       ],
     );
@@ -483,7 +513,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0,
+                    horizontal: 14.0,
                     vertical: 8.0), // Padding inside the button
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -515,7 +545,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
   }
 
 
-// Build checkbox node (multiple choice)
+// Build checkbox node (multiple choice) card contains the attachments along with it
   Widget _buildCheckbox(BotNode node) {
     return SingleChildScrollView(
       child: Column(
@@ -664,8 +694,8 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
   }
 
 
-  // Build checkbox node (multiple choice)
-  Widget _buildCheckboxWithPopUp(BotNode node) {
+  // Build checkbox node (multiple choice) card in row view with view more options to see all multimedia
+  Widget _buildCheckboxRowView(BotNode node) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -673,7 +703,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
           const SizedBox(height: 10),
           // Build each checkbox option as a card
           ...node.options!.map((option) {
-            return _buildCheckboxWithPopUpOption(option);
+            return _buildCheckboxRowViewOption(option);
           }).toList(),
           // Display "Next" button if there's a next node available
           if (node.nextNode != null)
@@ -682,8 +712,8 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: ElevatedButton(
-                  onPressed: () => _onOptionSelected(node.nextNode, node.triggerTTs),
-                  child:  const Text('Next' , style: TextStyle(color: Colors.white))
+                    onPressed: () => _onOptionSelected(node.nextNode, node.triggerTTs),
+                    child:  const Text('Next' , style: TextStyle(color: Colors.white))
                 ),
               ),
             ),
@@ -692,7 +722,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     );
   }
 
-  Widget _buildCheckboxWithPopUpOption(Option option) {
+  Widget _buildCheckboxRowViewOption(Option option) {
     return StatefulBuilder(
       builder: (context, setState) {
         final isSelected = selectedOptions.contains(option.value);
@@ -722,7 +752,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                      colors: [Colors.blue.shade50, Colors.white],
+                    colors: [Colors.blue.shade50, Colors.white],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -764,102 +794,165 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                       if ((option.images != null && option.images!.isNotEmpty) ||
                           option.audioClip != null ||
                           option.video != null)
+                        const SizedBox(height: 12),
+                      // Multimedia Section
+                      if ((option.images != null && option.images!.isNotEmpty) ||
+                          option.audioClip != null ||
+                          option.video != null)
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => MultimediaPopupPage(option: option),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: const Text(
+                              'View More >',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
+  // Build checkbox node (multiple choice) card in grid view with view more options to see all multimedia
+  Widget _buildCheckboxGridView(BotNode node) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+            height: (node.options!.length / 2).ceil() * 180,
+            child: _buildCheckboxGrid(node.options!)
+        ),
+        // Display "Next" button if there's a next node available
+        if (node.nextNode != null)
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: ElevatedButton(
+                onPressed: () => _onOptionSelected(node.nextNode, node.triggerTTs),
+                child: const Text('Next', style: TextStyle(color: Colors.white)),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildCheckboxGrid(List<Option> options) {
+    return GridView.builder(
+      padding: const EdgeInsets.all(8.0),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2, // Adjust for 2 columns
+        crossAxisSpacing: 6,
+        mainAxisSpacing: 2,
+        childAspectRatio: 1, // Adjust card height
+      ),
+      itemCount: options.length,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return _buildCheckboxGridOption(options[index]);
+      },
+    );
+  }
+
+  Widget _buildCheckboxGridOption(Option option) {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        final isSelected = selectedOptions.contains(option.value);
+
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                if (isSelected) {
+                  selectedOptions.remove(option.value);
+                } else {
+                  selectedOptions.add(option.value ?? '');
+                }
+              });
+            },
+            child: Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+                side: BorderSide(
+                  color: isSelected ? Colors.blue.shade900 : Colors.blue.shade50,
+                  width: 4,
+                ),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [Colors.blue.shade50, Colors.white],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16.0)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Text(
+                          option.label ?? 'No Label',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      if ((option.images != null && option.images!.isNotEmpty) ||
+                          option.audioClip != null ||
+                          option.video != null)
                       const SizedBox(height: 12),
                       // Multimedia Section
                       if ((option.images != null && option.images!.isNotEmpty) ||
                           option.audioClip != null ||
                           option.video != null)
                         GestureDetector(
-                          onTap: () => showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                backgroundColor: Colors
-                                    .transparent, // Make background transparent
-                                child: Stack(
-                                  children: [
-                                    // Full-Screen Popup Content
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 16.0, vertical: 24.0),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(12.0),
-                                      ),
-                                      child: SingleChildScrollView(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            // Description
-                                            Padding(
-                                              padding: const EdgeInsets.all(16.0),
-                                              child: Text(
-                                                option.description ??
-                                                    'No description available.',
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.black54,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 20),
-
-                                            // Multimedia Content
-                                            if (option.images != null &&
-                                                option.images!.isNotEmpty)
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 8.0),
-                                                child: CarouselSliderWidget(
-                                                  imageUrls: option.images!
-                                                ),
-                                              ),
-                                            if (option.audioClip != null)
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 16.0),
-                                                child: AudioPlayerWidget(
-                                                    audioUrl: option.audioClip!),
-                                              ),
-                                            if (option.video != null)
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 16.0),
-                                                child: VideoPlayerWidget(
-                                                    videoUrl: option.video!),
-                                              ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-
-                                    // Close Button
-                                    Positioned(
-                                      top: 10,
-                                      right: 0,
-                                      child: GestureDetector(
-                                        onTap: () => Navigator.of(context).pop(),
-                                        child: const CircleAvatar(
-                                          backgroundColor: Colors.white,
-                                          child: Icon(
-                                            Icons.close,
-                                            color: Color(0xFFAB2138),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                          child: const Text(
-                            'View More>',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                            builder: (context) => MultimediaPopupPage(option: option),
+                            ),
+                          );
+                        },
+                          child: Container(
+                            alignment: Alignment.bottomCenter,
+                            color: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child:  const Text(
+                              'View More >',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
                         ),

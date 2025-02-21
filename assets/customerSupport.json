@@ -1,0 +1,79 @@
+{
+  "Load Bot": {
+    "type": "Customer Support Bot",
+    "image": ["https://cdn.shopify.com/s/files/1/0704/4228/7358/files/botImage.jpg"],
+    "description": "Your Virtual Shopping Assistant",
+    "nextNode": "greeting"
+  },
+
+  "greeting": {
+    "type": "radioTypeWithTextOnly",
+    "botMessage": "Welcome to our store support! How can I assist you today?",
+    "image": ["https://cdn.shopify.com/s/files/1/0892/5577/2438/files/support_image.jpg"],
+    "options": [
+      { "label": "Track My Order", "value": "track_order", "nextNode": "order_tracking" },
+      { "label": "Return or Replace", "value": "return_replace", "nextNode": "return_policy" },
+      { "label": "Product Inquiry", "value": "product_inquiry", "nextNode": "product_details" },
+      { "label": "Talk to a Human", "value": "talk_to_human", "nextNode": "human_support" }
+    ]
+  },
+
+  "order_tracking": {
+    "type": "multimedia",
+    "botMessage": "Please provide your order number.",
+    "options": [
+      { "record_audio": "Say your order number" },
+      { "click_photo": "Upload a screenshot of your order confirmation" }
+    ],
+    "nextNode": "track_result"
+  },
+
+  "track_result": {
+    "type": "label",
+    "botMessage": "Your order is out for delivery! Expected arrival: Tomorrow.",
+    "nextNode": null
+  },
+
+  "return_policy": {
+    "type": "checkbox",
+    "botMessage": "What issue are you facing with the product?",
+    "options": [
+      { "label": "Damaged Product", "value": "damaged", "images": ["https://cdn.shopify.com/damaged_item.jpg"] },
+      { "label": "Wrong Product", "value": "wrong_item", "video": "https://www.youtube.com/sample_video" },
+      { "label": "Missing Parts", "value": "missing_parts" }
+    ],
+    "triggerTTs": "Please proceed with return request.",
+    "nextNode": "return_process"
+  },
+
+  "return_process": {
+    "type": "multimedia",
+    "botMessage": "Please upload an image or video of the issue.",
+    "options": [
+      { "record_video": "Upload a video showing the issue" },
+      { "click_photo": "Click a photo of the product" }
+    ],
+    "nextNode": "return_confirmation"
+  },
+
+  "return_confirmation": {
+    "type": "label",
+    "botMessage": "Your return request has been processed. A pickup will be scheduled soon!",
+    "nextNode": null
+  },
+
+  "product_details": {
+    "type": "radioTypeWithAttachments",
+    "botMessage": "Which product category are you interested in?",
+    "options": [
+      { "label": "Smartphones", "value": "smartphones", "images": ["https://cdn.shopify.com/phones.jpg"], "nextNode": "smartphone_options" },
+      { "label": "Laptops", "value": "laptops", "images": ["https://cdn.shopify.com/laptops.jpg"], "nextNode": "laptop_options" }
+    ]
+  },
+
+  "human_support": {
+    "type": "label",
+    "botMessage": "Connecting you to a support agent... Please wait!",
+    "nextNode": null
+  }
+}

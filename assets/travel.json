@@ -1,0 +1,197 @@
+{
+  "Load Bot": {
+    "type": "Trip Planner Assistant",
+    "image": ["https://cdn.shopify.com/s/files/1/0704/4228/7358/files/travel_bot.jpg"],
+    "description": "AI Trip Planner",
+    "nextNode": "Greetings"
+  },
+
+  "Greetings" : {
+    "type": "label",
+    "botMessage": "Hey, I am you AI Trip Planner.",
+    "nextNode" : "prepare_questions",
+    "triggerTTs" : "Let's decide your next destination"
+  },
+
+  "prepare_questions" : {
+    "type": "label",
+    "botMessage": "Wait, preparing some questions for planning you trip.",
+    "nextNode" : "climate_question"
+  },
+
+  "climate_question": {
+    "type": "radioTypeWithTextOnly",
+    "botMessage": "What kind of climate do you prefer for your trip?",
+    "image": ["https://cdn.shopify.com/s/files/1/0704/4228/7358/files/climate_options.jpg"],
+    "options": [
+      {
+        "label": "Tropical (Beaches, Warm & Humid)",
+        "value": "Tropical (Beaches, Warm & Humid)",
+        "nextNode": "vegetation_question",
+        "radioOptionTTs": ""
+      },
+      {
+        "label": "Cold & Snowy (Mountains, Skiing)",
+        "value": "Cold & Snowy (Mountains, Skiing)",
+        "nextNode": "vegetation_question",
+        "radioOptionTTs": ""
+      },
+      {
+        "label": "Moderate (Greenery, Pleasant Weather)",
+        "value": "Moderate (Greenery, Pleasant Weather)",
+        "nextNode": "vegetation_question",
+        "radioOptionTTs": ""
+      }
+    ]
+  },
+
+  "vegetation_question": {
+    "type": "radioTypeWithTextOnly",
+    "botMessage": "What type of landscapes do you prefer?",
+    "image": ["https://cdn.shopify.com/s/files/1/0704/4228/7358/files/nature_choices.jpg"],
+    "options": [
+      {
+        "label": "Mountains & Forests",
+        "value": "Mountains & Forests",
+        "nextNode": "activities_question"
+      },
+      {
+        "label": "Beaches & Islands",
+        "value": "Beaches & Islands",
+        "nextNode": "activities_question"
+      },
+      {
+        "label": "Deserts & Sand Dunes",
+        "value": "Deserts & Sand Dunes",
+        "nextNode": "activities_question"
+      }
+    ]
+  },
+
+  "activities_question": {
+    "type": "checkboxInGridView",
+    "botMessage": "Which activities are you interested in?",
+    "options": [
+      {
+        "label": "Adventure Sports",
+        "description": "Skydiving, Scuba Diving, Trekking, Skiing",
+        "value": "Adventure Sports",
+        "video": "https://www.youtube.com/watch?v=skydiving_adventure"
+      },
+      {
+        "label": "Cultural Experiences",
+        "description": "Local Traditions, Festivals, Temples, Museums",
+        "value": "Cultural Experiences",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/cultural_festival.jpg"
+        ]
+      },
+      {
+        "label": "Food Tours",
+        "description": "Trying Local Delicacies, Street Food, Fine Dining",
+        "value": "Food Tours",
+        "audioClip": "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/food_tour_audio.mp3"
+      },
+      {
+        "label": "Sightseeing",
+        "description": "Iconic Landmarks, Natural Wonders",
+        "value": "Sightseeing",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/tourist_spots.jpg"
+        ]
+      }
+    ],
+    "triggerTTs": "Great! Let’s refine your search.",
+    "nextNode": "location_question"
+  },
+
+  "location_question": {
+    "type": "radioTypeWithTextOnly",
+    "botMessage": "Would you like to travel within India or outside?",
+    "options": [
+      {
+        "label": "Within India",
+        "value": "Within India",
+        "nextNode": "india_recommendations"
+      },
+      {
+        "label": "Outside India",
+        "value": "Outside India",
+        "nextNode": "outside_recommendations"
+      }
+    ]
+  },
+
+  "india_recommendations": {
+    "type": "radioTypeWithAttachments",
+    "botMessage": "Based on your preferences, here are the best places for you in India:",
+    "options": [
+      {
+        "label": "Goa - Beach Paradise",
+        "value": "Goa - Beach Paradise",
+        "video": "https://www.youtube.com/watch?v=goa_travel",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/goa_beach.jpg"
+        ],
+        "nextNode": "thank_you"
+      },
+      {
+        "label": "Manali - Snowy Mountains",
+        "value": "Manali - Snowy Mountains",
+        "video": "https://www.youtube.com/watch?v=manali_trip",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/manali_mountains.jpg"
+        ],
+        "nextNode": "thank_you"
+      },
+      {
+        "label": "Rajasthan - Cultural Heritage",
+        "value": "Rajasthan - Cultural Heritage",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/rajasthan_palace.jpg"
+        ],
+        "nextNode": "thank_you"
+      }
+    ]
+  },
+
+  "outside_recommendations": {
+    "type": "radioTypeWithAttachments",
+    "botMessage": "Based on your preferences, here are some ideal countries for you:",
+    "options": [
+      {
+        "label": "Switzerland - Snow & Adventure",
+        "value": "Switzerland - Snow & Adventure",
+        "video": "https://www.youtube.com/watch?v=swiss_tourism",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/switzerland_mountains.jpg"
+        ],
+        "nextNode": "thank_you"
+      },
+      {
+        "label": "Thailand - Beaches & Food",
+        "value": "Thailand - Beaches & Food",
+        "video": "https://www.youtube.com/watch?v=thailand_trip",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/thailand_beach.jpg"
+        ],
+        "nextNode": "thank_you"
+      },
+      {
+        "label": "France - Culture & Cuisine",
+        "value": "France - Culture & Cuisine",
+        "video": "https://www.youtube.com/watch?v=france_travel",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/eiffel_tower.jpg"
+        ],
+        "nextNode": "thank_you"
+      }
+    ]
+  },
+
+  "thank_you": {
+    "type": "label",
+    "botMessage": "Thank you for planning your trip with us! ✈️ We'll create a customized itinerary for you.",
+    "nextNode": null
+  }
+}
