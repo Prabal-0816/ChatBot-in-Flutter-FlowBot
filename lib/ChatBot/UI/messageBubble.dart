@@ -27,18 +27,18 @@ class MessageBubble extends StatelessWidget {
           // Bot Avatar (only for bot messages)
           if (isBot)
             CircleAvatar(
-              // child: Container(
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(50.0),
-              //     border: Border.all(
-              //       color: Colors.blue.shade900,
-              //       width: 1.0,
-              //     ),
-              //   ),
-              // ),
               radius: 16,
               backgroundImage: NetworkImage(botImage),
               backgroundColor: Colors.blue.shade900,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50.0),
+                  border: Border.all(
+                    color: Colors.blue.shade900,
+                    width: 1.0,
+                  ),
+                ),
+              ),
             ),
           const SizedBox(width: 6), // Space between avatar and message bubble
 
