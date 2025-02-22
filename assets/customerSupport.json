@@ -49,13 +49,13 @@
       {"label": "Wrong Product", "value": "Wrong Product"},
       {"label": "Missing Parts", "value": "Missing Parts" }
     ],
-    "triggerTTs": "Sorry! for the inconvenience caused",
-    "nextNode": "return_process"
+    "triggerTTs": "Sorry for the inconvenience caused",
+    "nextNode": "return_or_exchange"
   },
 
   "return_or_exchange": {
     "type": "radioTypeWithTextOnly",
-    "botMessage": "So, would you like to return your product or put a request for exchange",
+    "botMessage": "Would you like to return your product or put a request for exchange",
     "options": [
       {"label": "Return", "value": "Return", "nextNode": "return_process"},
       {"label": "Exchange", "value": "Exchange", "nextNode": "exchange_process"}
@@ -79,7 +79,7 @@
       { "record_video": "Upload a video showing the issue" },
       { "click_photo": "Click a photo of the product" }
     ],
-    "nextNode": "return_confirmation"
+    "nextNode": "exchange_confirmation"
   },
 
   "return_confirmation": {

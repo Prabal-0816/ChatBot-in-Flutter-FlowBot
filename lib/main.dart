@@ -40,6 +40,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: BotFlowScreen(jsonFileName: 'travel.json'));
+        home: BotFlowScreen(jsonFileName: 'customerSupport.json'));
   }
 }

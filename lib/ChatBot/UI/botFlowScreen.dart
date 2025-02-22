@@ -1002,9 +1002,9 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                   onPressed: () async {
                     await _uploadMultimediaFiles();
                     anyFileCaptured == true
-                        ? selectedOptions.add("File upload Successfully")
+                        ? selectedOptions.add("File uploaded Successfully")
                         : selectedOptions.add("No Files Uploaded");
-                    String tts = anyFileCaptured == true ? 'Files have been successfully uploaded'
+                    String tts = anyFileCaptured == true ? 'Files uploaded successfully'
                         : 'No files uploaded';
                     _onOptionSelected(node.nextNode, tts);
                   },
