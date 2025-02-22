@@ -89,7 +89,11 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
   void _scrollToMessage() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
-        final double offset = _scrollController.position.maxScrollExtent / 3; // Adjust as needed
+        final double maxScroll = _scrollController.position.maxScrollExtent;
+        final double viewportHeight = _scrollController.position.viewportDimension;
+
+        //  If the content height is greater than the screen size, scroll 1/3rd
+        final double offset = maxScroll > viewportHeight ? maxScroll / 1.5 : maxScroll;
         _scrollController.animateTo(
           offset,
           duration: const Duration(milliseconds: 300),
@@ -111,10 +115,9 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
       displayedMessage += '$word ';
       setState(() {
         messages[messages.length - 1]['text'] = displayedMessage;
+        _scrollToBottom();
       });
     }
-
-    _scrollToBottom();
 
     await Future.delayed(const Duration(seconds: 1));
 
@@ -193,6 +196,9 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
             children: [
               const SizedBox(height: 20),
               CircleAvatar(
+                radius: 50, // Adjust the size of the avatar
+                backgroundImage: NetworkImage(botImage), // Your bot image path
+                backgroundColor: Colors.blue.shade900,
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50.0),
@@ -202,9 +208,6 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
                     ),
                   ),
                 ),
-                radius: 50, // Adjust the size of the avatar
-                backgroundImage: NetworkImage(botImage), // Your bot image path
-                backgroundColor: Colors.blue.shade900,
               ),
               const SizedBox(height: 10),
               Text(
@@ -241,16 +244,27 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
     // ApiInfo is a list ['type(book ticket , dispose Appliance , etc)' , 'apiUrl' , 'keywords to be searched']
 
     // Updation of UI for the user's response
+    String userReply = '';
+    if(selectedOptions.isNotEmpty) {
+      if(selectedOptions.length == 1) {
+        userReply = selectedOptions[0];
+      }
+      else {
+        userReply = "${selectedOptions.sublist(0 , selectedOptions.length - 1).join(', ')} "
+            "and ${selectedOptions.last}";
+      }
+    }
+
     setState(() {
       showOptions = false;
-      for (String options in selectedOptions) {
+      if(userReply != '') {
         messages.add({
           'type': 'user',
-          'text': options,
+          'text': userReply,
           'timestamp': DateTime.now()
         });
-        _scrollToBottom();
       }
+      _scrollToBottom();
 
       // Add intent and options in intentAnswer
       final String? intent = botFlow?[currentNodeKey]?.intent;
@@ -316,7 +330,7 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
       return const SizedBox.shrink();
     }
     // List<String> images = node.image!;
-    return CarouselSliderWidget(imageUrls: node.image!);
+    return CarouselSliderWidget(imageUrls: node.image! , layoverData: node.layoverData ?? []);
   }
 
   // Build dynamic bot node based on type
@@ -413,21 +427,20 @@ class _BotFlowScreenState extends State<BotFlowScreen> {
           final isSelected = selectedOptions.contains(option.value);
 
           return Padding(
-            padding: const EdgeInsets.symmetric(
-                vertical: 4.0), // Add vertical space between options
+            padding: const EdgeInsets.symmetric(vertical: 8.0), // Add vertical space between options
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Show images above the button if they exist
-                if (option.images != null &&
-                    option.images!.isNotEmpty &&
-                    option.images!.length > 1)
+                if (option.images != null && option.images!.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: CarouselSliderWidget(
                       imageUrls: option.images!,
+                      layoverData: option.layoverData ?? [],
                     ),
                   ),
+
                 // Display audio player if audio is available
                 if (option.audioClip != null)
                   Padding(

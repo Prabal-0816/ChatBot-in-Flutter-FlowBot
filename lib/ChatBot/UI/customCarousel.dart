@@ -3,10 +3,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 class CarouselSliderWidget extends StatefulWidget {
   final List<String> imageUrls;
+  final List<String>? layoverData;
 
-  const CarouselSliderWidget({
+   CarouselSliderWidget({
     super.key,
     required this.imageUrls,
+    this.layoverData
   });
 
   @override
@@ -33,7 +35,7 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
                 viewportFraction: 1.0,
                 enableInfiniteScroll: true,
                 autoPlay: widget.imageUrls.length > 1 ? true : false,
-                autoPlayInterval: const Duration(seconds: 4),
+                autoPlayInterval: const Duration(seconds: 5),
                 pauseAutoPlayOnTouch: true,
                 enlargeCenterPage: false,
                 onPageChanged: (index, reason) {
@@ -51,7 +53,7 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
                     children: [
                       // Main image with rounded corners
                       Container(
-                        padding: const EdgeInsets.all(8.0), // Add padding here
+                        padding: const EdgeInsets.all(2.0), // Add padding here
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16.0), // Rounded corners
                           child: Image.network(
@@ -69,6 +71,9 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
                           ),
                         ),
                       ),
+                      // overlay text on image
+                      if(widget.layoverData != null && widget.layoverData!.isNotEmpty)
+                        _buildOverlayText(widget.layoverData![index])
                     ],
                   ),
                 );
@@ -131,6 +136,36 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildOverlayText(String text) {
+    return Stack(
+      children: [
+        if(text.isNotEmpty)
+          Center(
+            child: Positioned(
+              // top: 10,
+              // right: 10,
+              // left: 50,
+              child: Container(
+                // color: Colors.black54,
+                padding: const EdgeInsets.all(4.0),
+                decoration: BoxDecoration(
+                  color: Colors.black38,
+                  borderRadius: BorderRadius.circular(16)
+                ),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                      text,
+                      style: const TextStyle(color: Colors.white, fontSize: 14)
+                  ),
+                ),
+              ),
+            ),
+          )
+      ],
     );
   }
 }

@@ -1,46 +1,49 @@
 {
   "Load Bot": {
     "type": "Trip Planner Assistant",
-    "image": ["https://cdn.shopify.com/s/files/1/0704/4228/7358/files/travel_bot.jpg"],
+    "image": ["https://www.shutterstock.com/image-illustration/cute-3d-robot-hand-hello-600nw-2299232587.jpg"],
     "description": "AI Trip Planner",
     "nextNode": "Greetings"
   },
 
-  "Greetings" : {
+  "Greetings": {
     "type": "label",
-    "botMessage": "Hey, I am you AI Trip Planner.",
-    "nextNode" : "prepare_questions",
-    "triggerTTs" : "Let's decide your next destination"
+    "botMessage": "Hey, I am your AI Trip Planner. Let's plan your dream trip!",
+    "nextNode": "prepare_questions"
   },
 
-  "prepare_questions" : {
+  "prepare_questions": {
     "type": "label",
-    "botMessage": "Wait, preparing some questions for planning you trip.",
-    "nextNode" : "climate_question"
+    "botMessage": "Wait, preparing some questions to plan your trip.",
+    "nextNode": "climate_question"
   },
 
   "climate_question": {
     "type": "radioTypeWithTextOnly",
-    "botMessage": "What kind of climate do you prefer for your trip?",
-    "image": ["https://cdn.shopify.com/s/files/1/0704/4228/7358/files/climate_options.jpg"],
+    "botMessage": "Okay, what kind of climate do you prefer for your trip?",
+    "intent": "climate",
+    "image": ["https://images.nationalgeographic.org/image/upload/v1638887255/EducationHub/photos/day-in-the-tropics.jpg",
+    "https://thumbs.dreamstime.com/b/snowy-mountain-slope-frozen-lakes-rivers-natural-scenery-river-cold-climate-jpg-vector-illustration-ai-generated-359521851.jpg",
+    "https://cdn.pixabay.com/photo/2017/09/20/06/27/bridge-2767545_640.jpg"],
+    "layoverData" : ["Tropical(Beaches, Warm & Humid)" , "Cold & Snowy(Mountains, Skiing)", "Moderate(Greenery, Pleasant Weather)"],
     "options": [
       {
         "label": "Tropical (Beaches, Warm & Humid)",
         "value": "Tropical (Beaches, Warm & Humid)",
         "nextNode": "vegetation_question",
-        "radioOptionTTs": ""
+        "radioOptionTTs": "Tropical climates are Perfect for a sunny escape!"
       },
       {
         "label": "Cold & Snowy (Mountains, Skiing)",
         "value": "Cold & Snowy (Mountains, Skiing)",
         "nextNode": "vegetation_question",
-        "radioOptionTTs": ""
+        "radioOptionTTs": "Cold climates are the best"
       },
       {
         "label": "Moderate (Greenery, Pleasant Weather)",
         "value": "Moderate (Greenery, Pleasant Weather)",
         "nextNode": "vegetation_question",
-        "radioOptionTTs": ""
+        "radioOptionTTs": "Lovely pick! Nature and comfort combined!"
       }
     ]
   },
@@ -48,22 +51,29 @@
   "vegetation_question": {
     "type": "radioTypeWithTextOnly",
     "botMessage": "What type of landscapes do you prefer?",
-    "image": ["https://cdn.shopify.com/s/files/1/0704/4228/7358/files/nature_choices.jpg"],
+    "intent": "landscapes",
+    "image": ["https://media.istockphoto.com/id/543180862/photo/smoky-mountain-valley-view.jpg?s=612x612&w=0&k=20&c=9aEhYK9Rq3Y-ewxp_DQzYNttixwe5JqJH-t8QXRlDAw=",
+    "https://media.cntraveler.com/photos/61eae2a9fe18edcbd885cb01/3:2/w_4047,h_2698,c_limit/Seychelles_GettyImages-1169388113.jpg",
+    "https://www.treadmagazine.com/wp-content/uploads/2022/03/Sonora-002-scaled.jpg"],
+    "layoverData" : ["Mountains & Forests" , "Beaches & Islands" , "Deserts & Sand Dunes"],
     "options": [
       {
         "label": "Mountains & Forests",
         "value": "Mountains & Forests",
-        "nextNode": "activities_question"
+        "nextNode": "activities_question",
+        "radioOptionTTs": "Awesome pick! Adventure and serenity await!"
       },
       {
         "label": "Beaches & Islands",
         "value": "Beaches & Islands",
-        "nextNode": "activities_question"
+        "nextNode": "activities_question",
+        "radioOptionTTs": "Great choice! Waves and paradise vibes ahead!"
       },
       {
         "label": "Deserts & Sand Dunes",
         "value": "Deserts & Sand Dunes",
-        "nextNode": "activities_question"
+        "nextNode": "activities_question",
+        "radioOptionTTs": "Unique pick! Golden sands and endless horizons!"
       }
     ]
   },
@@ -71,127 +81,254 @@
   "activities_question": {
     "type": "checkboxInGridView",
     "botMessage": "Which activities are you interested in?",
+    "intent": "interested activities",
     "options": [
       {
         "label": "Adventure Sports",
-        "description": "Skydiving, Scuba Diving, Trekking, Skiing",
+        "description": "Thrill-seekers’ paradise! Experience adrenaline-pumping activities like skydiving, scuba diving, trekking, and more!",
         "value": "Adventure Sports",
-        "video": "https://www.youtube.com/watch?v=skydiving_adventure"
+        "images": ["https://images.pexels.com/photos/70361/california-parachutists-skydivers-flares-70361.jpeg",
+        "https://images.unsplash.com/photo-1601024445121-e5b82f020549?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2t5ZGl2aW5nfGVufDB8fDB8fHww",
+        "https://sustainabletravel.org/wp-content/uploads/Blog-Header-Diver-School-of-Fish.jpg",
+        "https://cdn.britannica.com/81/124081-050-740D9BE2/Scuba-diver.jpg",
+        "https://www.peakadventuretour.com/blog/wp-content/uploads/2018/11/Trekking-Poles-during-Trekking.jpg",
+        "https://plus.unsplash.com/premium_photo-1677002240252-af3f88114efc?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dHJla2tpbmd8ZW58MHx8MHx8fDA%3D",
+        "https://media.self.com/photos/5a3c3f3a2323e96043af81b7/4:3/w_2560%2Cc_limit/ashley-mateo-skiing-baby-steps%2520(1).jpg",
+        "https://media.cnn.com/api/v1/images/stellar/prod/sb3-2023-march-ssv-reubenkrabbe.jpg?c=16x9&q=h_833,w_1480,c_fill"],
+        "video": "https://youtu.be/UAfL7gzx72Y?si=gzOec3QDsEpTotBV"
       },
       {
         "label": "Cultural Experiences",
-        "description": "Local Traditions, Festivals, Temples, Museums",
+        "description": "Immerse yourself in rich traditions, festivals, local arts, and historical heritage for an authentic journey!",
         "value": "Cultural Experiences",
-        "images": [
-          "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/cultural_festival.jpg"
-        ]
+        "images": ["https://litmag.co.uk/wp-content/uploads/2024/05/culture2-jpg.webp",
+          "https://d2rdhxfof4qmbb.cloudfront.net/wp-content/uploads/20181212162032/Traditional-Kathakali-dance.jpg",
+          "https://www.travelandleisure.com/thmb/OGqKU3DtKB-TmF7OWZKtP58jy88=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/bhaktapur-nepal-holi-HOLI0219-b713df59f115452baa1374efb3e59ff2.jpg",
+          "https://people.com/thmb/-1Qzh0dM6aM1P03_JrZ1gmvPyG0=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(749x99:751x101)/diwali-102022-3-05a455826c2f4a2b993740300f88f041.jpg",
+        "https://utsav.gov.in/public/festival_top/1659608853.jpg"],
+        "video": "https://youtu.be/NrB5rvEMyo0?si=pkJ1T_IRGFmZgK3X"
       },
       {
         "label": "Food Tours",
         "description": "Trying Local Delicacies, Street Food, Fine Dining",
-        "value": "Food Tours",
-        "audioClip": "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/food_tour_audio.mp3"
+        "value": "Food Tours"
       },
       {
         "label": "Sightseeing",
-        "description": "Iconic Landmarks, Natural Wonders",
+        "description": "Explore breathtaking landscapes, iconic landmarks, and hidden gems for a memorable visual treat!",
         "value": "Sightseeing",
-        "images": [
-          "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/tourist_spots.jpg"
-        ]
+        "images": ["https://www.jcrcab.com/wp-content/uploads/2020/08/1540816023_shutterstock_415397137.jpg.jpg",
+        "https://www.gohawaii.com/sites/default/files/styles/image_gallery_bg_xl/public/hero-unit-images/10759.jpg.webp?itok=HxV2ke8t",
+        "https://media2.thrillophilia.com/images/photos/000/179/384/original/1573885213_shutterstock_1169919292.jpg?width=975&height=600",
+        "https://www.indiapersonaltours.com/blog_images/off-the-beaten-path-hidden-gems-of-india-for-private-tourists.jpg"],
+        "video": "https://youtu.be/fYR5hRdYh9Q?si=d-Vf7CBu4Xbthv31"
       }
     ],
     "triggerTTs": "Great! Let’s refine your search.",
     "nextNode": "location_question"
   },
 
+  "budget_question": {
+    "type": "radioTypeWithTextOnly",
+    "botMessage": "What is your budget for this trip?",
+    "intent": "budget",
+    "options": [
+      {
+        "label": "Low Budget (Economical)",
+        "value": "Low Budget (Economical)",
+        "nextNode": "duration_question",
+        "radioOptionTTs": "Smart choice! Great experiences don’t need big spending!"
+      },
+      {
+        "label": "Medium Budget (Comfortable)",
+        "value": "Medium Budget (Comfortable)",
+        "nextNode": "duration_question",
+        "radioOptionTTs": "Perfect balance! Comfort and adventure go hand in hand!"
+      },
+      {
+        "label": "High Budget (Luxury)",
+        "value": "High Budget (Luxury)",
+        "nextNode": "duration_question",
+        "radioOptionTTs": "Excellent pick! Get ready for a lavish experience!"
+      }
+    ]
+  },
+
+  "duration_question": {
+    "type": "radioTypeWithTextOnly",
+    "botMessage": "How many days do you want me to prepare the itinerary?",
+    "intent" : "days",
+    "options": [
+      {
+        "label": "Short Trip (3-5 days)",
+        "value": "Short Trip (3-5 days)",
+        "nextNode": "travel_companions_question",
+        "radioOptionTTs": "A quick escape! Make every moment count!"
+      },
+      {
+        "label": "Medium Trip (1-2 weeks)",
+        "value": "Medium Trip (1-2 weeks)",
+        "nextNode": "travel_companions_question",
+        "radioOptionTTs": "Great pick! Enough time to explore and relax!"
+      },
+      {
+        "label": "Long Trip (3+ weeks)",
+        "value": "Long Trip (3+ weeks)",
+        "nextNode": "travel_companions_question",
+        "radioOptionTTs": "Wow! An epic journey full of new experiences!"
+      }
+    ]
+  },
+
+  "travel_companions_question": {
+    "type": "radioTypeWithTextOnly",
+    "botMessage": "Who are you traveling with?",
+    "intent": "travelling partner",
+    "options": [
+      {
+        "label": "Solo Traveler",
+        "value": "Solo Traveler",
+        "nextNode": "location_question",
+        "radioOptionTTs": "Brave choice! Solo trips bring the best adventures!"
+      },
+      {
+        "label": "With Family",
+        "value": "With Family",
+        "nextNode": "location_question",
+        "radioOptionTTs": "Lovely! Cherish unforgettable moments with your loved ones!"
+      },
+      {
+        "label": "With Friends",
+        "value": "With Friends",
+        "nextNode": "location_question",
+        "radioOptionTTs": "Fantastic! Trips with friends make the best memories!"
+      }
+    ]
+  },
+
   "location_question": {
     "type": "radioTypeWithTextOnly",
     "botMessage": "Would you like to travel within India or outside?",
+    "intent" : "india or abroad",
     "options": [
       {
         "label": "Within India",
         "value": "Within India",
-        "nextNode": "india_recommendations"
+        "nextNode": "india_recommendations",
+        "radioOptionTTs": "Great choice! India has incredible places to explore!"
       },
       {
         "label": "Outside India",
         "value": "Outside India",
-        "nextNode": "outside_recommendations"
+        "nextNode": "outside_recommendations",
+        "radioOptionTTs": "Exciting! Get ready for a global adventure!"
       }
     ]
   },
 
   "india_recommendations": {
     "type": "radioTypeWithAttachments",
-    "botMessage": "Based on your preferences, here are the best places for you in India:",
+    "botMessage": "Based on your preferences, here are the best places for you in India. Which one do you prefer",
+    "intent": "preferred place",
     "options": [
       {
         "label": "Goa - Beach Paradise",
         "value": "Goa - Beach Paradise",
-        "video": "https://www.youtube.com/watch?v=goa_travel",
-        "images": [
-          "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/goa_beach.jpg"
+        "images": ["https://images.unsplash.com/photo-1614082242765-7c98ca0f3df3?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Z29hfGVufDB8fDB8fHww",
+          "https://s7ap1.scene7.com/is/image/incredibleindia/calangute-beach-goa-7-musthead-hero?qlt=82&ts=1726735078814",
+          "https://s7ap1.scene7.com/is/image/incredibleindia/fort-aguada-goa-1-musthead-hero?qlt=82&ts=1726735022123",
+          "https://travelogyindia.b-cdn.net/storage/app/article/420/chapora-fort-goa-thumb.jpg",
+          "https://s7ap1.scene7.com/is/image/incredibleindia/naval-aviation-museum-goa-goa-2-attr-hero?qlt=82&ts=1726735373710"
         ],
-        "nextNode": "thank_you"
+        "nextNode": "final_itinerary",
+        "radioOptionTTs": "Sun, sand, and waves! Goa never disappoints!"
       },
       {
         "label": "Manali - Snowy Mountains",
         "value": "Manali - Snowy Mountains",
-        "video": "https://www.youtube.com/watch?v=manali_trip",
-        "images": [
-          "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/manali_mountains.jpg"
-        ],
-        "nextNode": "thank_you"
+        "images": ["https://spiceholiday.in/wp-content/uploads/2023/07/solang-valley.jpg",
+        "https://media1.thrillophilia.com/filestore/ti863wmamibazuwbtn2seeqvj0aa_gallery_1649401980.png",
+        "https://t4.ftcdn.net/jpg/05/96/02/31/360_F_596023161_TEOuLtZjO550DVHXSIMNzfznWGK2oaWX.jpg",
+        "https://viacation.com/wp-content/uploads/2024/12/rahala-1-1.jpg",
+        "https://s7ap1.scene7.com/is/image/incredibleindia/hidimba-temple-manali-himachal-pradesh-1-attr-hero?qlt=82&ts=1726730676784"],
+        "nextNode": "final_itinerary",
+        "radioOptionTTs": "Breathtaking views and fresh mountain air await!"
       },
       {
         "label": "Rajasthan - Cultural Heritage",
         "value": "Rajasthan - Cultural Heritage",
-        "images": [
-          "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/rajasthan_palace.jpg"
-        ],
-        "nextNode": "thank_you"
+        "images": ["https://d27k8xmh3cuzik.cloudfront.net/wp-content/uploads/2016/02/Hawa-Mahal.jpg",
+        "https://www.akshartours.com/wp-content/uploads/2020/07/Best-Place-to-Visit-in-Rajasthan-1536x744.jpg",
+        "https://www.honeymoonbug.com/blog/wp-content/uploads/2021/07/Jaisalmer.jpg",
+        "https://travelwarm.com/wp-content/uploads/2020/06/rajasthan.jpg",
+        "https://4.bp.blogspot.com/-yljY3CY8jLE/U1YF_Pt5tBI/AAAAAAAAE-s/GqmdH2xHQEo/s1600/Jaisalmer%2B-%2BBaraBagh.jpg"],
+        "nextNode": "final_itinerary",
+        "radioOptionTTs": "Royal palaces and rich traditions—an unforgettable experience!"
       }
     ]
   },
 
   "outside_recommendations": {
     "type": "radioTypeWithAttachments",
-    "botMessage": "Based on your preferences, here are some ideal countries for you:",
+    "botMessage": "Based on your preferences, here are some ideal countries for you. Which one would you prefer",
+    "intent" : "preferred place",
     "options": [
       {
         "label": "Switzerland - Snow & Adventure",
         "value": "Switzerland - Snow & Adventure",
-        "video": "https://www.youtube.com/watch?v=swiss_tourism",
-        "images": [
-          "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/switzerland_mountains.jpg"
-        ],
-        "nextNode": "thank_you"
+        "images": ["https://c.myholidays.com/blog/blog/content/images/2021/04/Places-To-Visit-In-Switzerland.jpg",
+        "https://handluggageonly.co.uk/wp-content/uploads/2014/10/Hand-Luggage-Only-2.jpg",
+        "https://journeyz.co/wp-content/uploads/2020/08/Basel-2048x1365.jpg",
+        "https://www.pocketwanderings.com/wp-content/uploads/2021/01/Spiez-1.jpg",
+        "https://travelwarm.com/wp-content/uploads/2020/09/Zurich-Switzerland.jpg"],
+        "nextNode": "final_itinerary",
+        "radioOptionTTs": "A fairytale land! Adventure and beauty combined!"
       },
       {
         "label": "Thailand - Beaches & Food",
         "value": "Thailand - Beaches & Food",
-        "video": "https://www.youtube.com/watch?v=thailand_trip",
-        "images": [
-          "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/thailand_beach.jpg"
-        ],
-        "nextNode": "thank_you"
-      },
-      {
-        "label": "France - Culture & Cuisine",
-        "value": "France - Culture & Cuisine",
-        "video": "https://www.youtube.com/watch?v=france_travel",
-        "images": [
-          "https://cdn.shopify.com/s/files/1/0704/4228/7358/files/eiffel_tower.jpg"
-        ],
-        "nextNode": "thank_you"
+        "images": ["https://www.goatsontheroad.com/wp-content/uploads/2018/09/places-to-visit-in-thailand-1.jpg",
+        "https://www.roadaffair.com/wp-content/uploads/2017/10/doi-inthanon-national-park-thailand-shutterstock_227684350.jpg",
+        "https://d2gr5kl7dt2z3t.cloudfront.net/blog/wp-content/uploads/2015/05/11.-Banana-Republic-images-.jpg",
+        "https://handluggageonly.co.uk/wp-content/uploads/2017/09/Wat-Arun.jpg",
+        "https://www.emperortraveline.com/wp-content/uploads/2021/12/Thailand.jpg",
+        "https://foundtheworld.com/wp-content/uploads/2016/04/Bangkok-Thailand-10.jpg"],
+        "nextNode": "final_itinerary",
+        "radioOptionTTs": "Exotic flavors and stunning beaches—pure bliss!"
       }
     ]
   },
 
-  "thank_you": {
+  "final_itinerary": {
     "type": "label",
-    "botMessage": "Thank you for planning your trip with us! ✈️ We'll create a customized itinerary for you.",
-    "nextNode": null
+    "botMessage": "We will be contacting you soon after completing a full itinerary according to your choices...",
+    "nextNode": "feedback"
+  },
+
+  "feedback": {
+    "type": "label",
+    "botMessage": "Thank you for using our Trip Planner! Please share your feedback to help us improve.",
+    "nextNode": "restart"
+  },
+
+  "restart": {
+    "type": "radioTypeWithTextOnly",
+    "botMessage": "Would you like to plan another trip?",
+    "options": [
+      {
+        "label": "Yes",
+        "value": "Yes",
+        "nextNode": "Greetings"
+      },
+      {
+        "label": "No",
+        "value": "No",
+        "nextNode": "end"
+      }
+    ]
+  },
+  "end": {
+    "type": "label",
+    "botMessage": "If you need any further assistance related to planning trip, I am there to help you out."
   }
 }

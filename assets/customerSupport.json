@@ -1,54 +1,80 @@
 {
   "Load Bot": {
     "type": "Customer Support Bot",
-    "image": ["https://cdn.shopify.com/s/files/1/0704/4228/7358/files/botImage.jpg"],
+    "image": ["https://www.shutterstock.com/image-illustration/cute-3d-robot-hand-hello-600nw-2299232587.jpg"],
     "description": "Your Virtual Shopping Assistant",
     "nextNode": "greeting"
   },
 
   "greeting": {
+    "type": "label",
+    "botMessage": "Welcome to our store support!",
+    "nextNode": "start"
+  },
+
+  "start": {
     "type": "radioTypeWithTextOnly",
-    "botMessage": "Welcome to our store support! How can I assist you today?",
-    "image": ["https://cdn.shopify.com/s/files/1/0892/5577/2438/files/support_image.jpg"],
+    "botMessage": "How can I assist you?",
     "options": [
-      { "label": "Track My Order", "value": "track_order", "nextNode": "order_tracking" },
-      { "label": "Return or Replace", "value": "return_replace", "nextNode": "return_policy" },
-      { "label": "Product Inquiry", "value": "product_inquiry", "nextNode": "product_details" },
-      { "label": "Talk to a Human", "value": "talk_to_human", "nextNode": "human_support" }
+      { "label": "Track My Order", "value": "Track My Order", "nextNode": "order_tracking" },
+      { "label": "Return or Replace", "value": "Return or Replace", "nextNode": "return_policy" },
+      { "label": "Talk to a Human", "value": "Talk to a Human", "nextNode": "human_support" }
     ]
   },
 
   "order_tracking": {
-    "type": "multimedia",
-    "botMessage": "Please provide your order number.",
+    "type": "radioTypeWithTextOnly",
+    "botMessage": "Please select the order which you want to track.",
     "options": [
-      { "record_audio": "Say your order number" },
-      { "click_photo": "Upload a screenshot of your order confirmation" }
-    ],
-    "nextNode": "track_result"
+      {"label": "Order Id : 1285647891, Order Date : 12 June 2024, Products : Nike-Air Max Impact 4 Sneakers for Men",
+        "value": "Order Id : 1285647891", "nextNode": "track_result"},
+      {"label": "Order Id : 7895462154, Order Date : 11 June 2024, Products : Zebronics Wireless Bluetooth Keyboard and Mouse",
+        "value": "Order Id : 7895462154", "nextNode": "track_result"},
+      {"label": "Order Id : 6542189752, Order Date : 8 June 2024, Products: Optimum Nutrition(ON)-Whey protein",
+        "value": "Order Id : 6542189752", "nextNode": "track_result"}
+    ]
   },
 
   "track_result": {
     "type": "label",
     "botMessage": "Your order is out for delivery! Expected arrival: Tomorrow.",
-    "nextNode": null
+    "nextNode": "more_assistance"
   },
 
   "return_policy": {
-    "type": "checkbox",
+    "type": "checkboxInGridView",
     "botMessage": "What issue are you facing with the product?",
     "options": [
-      { "label": "Damaged Product", "value": "damaged", "images": ["https://cdn.shopify.com/damaged_item.jpg"] },
-      { "label": "Wrong Product", "value": "wrong_item", "video": "https://www.youtube.com/sample_video" },
-      { "label": "Missing Parts", "value": "missing_parts" }
+      {"label": "Damaged Product", "value": "Damaged Products"},
+      {"label": "Wrong Product", "value": "Wrong Product"},
+      {"label": "Missing Parts", "value": "Missing Parts" }
     ],
-    "triggerTTs": "Please proceed with return request.",
+    "triggerTTs": "Sorry! for the inconvenience caused",
     "nextNode": "return_process"
+  },
+
+  "return_or_exchange": {
+    "type": "radioTypeWithTextOnly",
+    "botMessage": "So, would you like to return your product or put a request for exchange",
+    "options": [
+      {"label": "Return", "value": "Return", "nextNode": "return_process"},
+      {"label": "Exchange", "value": "Exchange", "nextNode": "exchange_process"}
+    ]
   },
 
   "return_process": {
     "type": "multimedia",
-    "botMessage": "Please upload an image or video of the issue.",
+    "botMessage": "Okay, Can you provide video and images of the product.",
+    "options": [
+      { "record_video": "Upload a video showing the issue" },
+      { "click_photo": "Click a photo of the product" }
+    ],
+    "nextNode": "return_confirmation"
+  },
+
+  "exchange_process": {
+    "type": "multimedia",
+    "botMessage": "Okay, Can you provide video and images of the product.",
     "options": [
       { "record_video": "Upload a video showing the issue" },
       { "click_photo": "Click a photo of the product" }
@@ -58,17 +84,29 @@
 
   "return_confirmation": {
     "type": "label",
-    "botMessage": "Your return request has been processed. A pickup will be scheduled soon!",
+    "botMessage": "Your return request has been processed. A pickup will be scheduled soon!. Thank you and have a nice day.",
     "nextNode": null
   },
 
-  "product_details": {
-    "type": "radioTypeWithAttachments",
-    "botMessage": "Which product category are you interested in?",
+  "exchange_confirmation": {
+    "type": "label",
+    "botMessage": "Your exchange request has been submitted. Soon you will be updated via text message. Thank you and have a nice day.",
+    "nextNode": null
+  },
+
+  "more_assistance": {
+    "type": "radioTypeWithTextOnly",
+    "botMessage" : "Do you need any further assistance!",
     "options": [
-      { "label": "Smartphones", "value": "smartphones", "images": ["https://cdn.shopify.com/phones.jpg"], "nextNode": "smartphone_options" },
-      { "label": "Laptops", "value": "laptops", "images": ["https://cdn.shopify.com/laptops.jpg"], "nextNode": "laptop_options" }
+      {"label": "Yes", "value": "Yes", "nextNode": "start"},
+      {"label": "No", "value": "No", "nextNode": "end"}
     ]
+  },
+
+  "end": {
+    "type": "label",
+    "botMessage": "Thank You and have a nice day...",
+    "nextNode": null
   },
 
   "human_support": {

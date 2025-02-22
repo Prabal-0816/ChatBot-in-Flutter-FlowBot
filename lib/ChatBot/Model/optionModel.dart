@@ -6,6 +6,7 @@ class Option {
   final String? value;      // answer for the intent and will be shown on UI after selection of option
   final String? nextNode;   // Will be triggered when the any of the option is selected in case of Radio Node
   final List<String>? images;   // images to be shown along with the option
+  final List<String>? layoverData;  // layover text over the respective image in above images list
   final String? audioClip;    // contains the audio clip to be shown along with the option
   final String? video;        // contains the video link to be shown along with the option
   final String? recordVideo;  // this is for multimedia input to record video
@@ -21,6 +22,7 @@ class Option {
     this.value,
     this.nextNode,
     this.images,
+    this.layoverData,
     this.audioClip,
     this.video,
     this.recordVideo,
@@ -39,6 +41,9 @@ class Option {
         value: json['value'] as String?,
         nextNode: json['nextNode'] as String?,
         images: (json['images'] as List<dynamic>?)
+            ?.map((e) => e as String)
+            .toList(),
+        layoverData: (json['layoverData'] as List<dynamic>?)
             ?.map((e) => e as String)
             .toList(),
         audioClip: json['audioClip'] as String?,
