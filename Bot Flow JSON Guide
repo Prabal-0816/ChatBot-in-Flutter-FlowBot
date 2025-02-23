@@ -1,0 +1,152 @@
+This guide will help you create a structured JSON file to drive the bot's flow. The bot operates using a JSON-based structure where each node represents a step in the conversation.
+Their are 3 things that needed to be updated in order to run your json file: 
+  First save you file in assets section with .json extension and add it under the assests section in pubspec.yaml file of the project. 
+  Now just aupdate the fileName in main.dart with your specified file name and the bot is ready.
+
+Just copy this prompt below and give to any GPT and create your own flow. 
+
+# Node Types & Their Functions
+1. Radio Nodes (Single Select Options)
+  radioTypeWithAttachments: Options with individual attachments (video, images, audio).
+  radioTypeWithTextOnly: Options share common images.
+2. Checkbox Nodes (Multi-Select Options)
+  checkbox: Each option is shown as a card with attachments (images/videos).
+  checkboxInRowView: Same as checkbox, but with a “View More” button.
+  checkboxInGridView: Displays options in a grid format with a “View More” button.
+  Use checkboxInRowView or checkboxInGridView when there are too many attachments.
+3. Multimedia Node
+  multimedia: Allows the user to capture images, record audio, or record video.
+4. Label Nodes (Bot Messages)
+  label: Displays a message and moves automatically to the next step.
+  labelWithNext: Displays a message, but the user must click "Next" to proceed.
+5. Mandatory Node: "Load Bot"
+  Every JSON must start with a "Load Bot" node that assigns the bot its core properties.
+
+This is the format of the json file representing the use case of various nodes
+{
+  "Load Bot": {			// mandatory as it assigns the bot its properties
+    "type": "Trip Planner Assistant",		// This text that will be shown on appbar
+    "image": ["https://www.shutterstock.com/image-illustration/cute-3d-robot-hand-hello-600nw-2299232587.jpg"],		// bot Image link
+    "description": "AI Trip Planner",		// name of the bot
+    "nextNode": "Greetings"		// the next node to which the flow will be triggered
+  },
+  "Greetings": {
+    "type": "label",
+    "botMessage": "Hey, I am your AI Trip Planner. Let's plan your dream trip!",	// Message shown by the bot on the UI
+    "nextNode": "prepare_questions"
+  },
+  "prepare_questions": {
+    "type": "labelWithNext",		// triggers the next node only when the user presses the next button shown on the screen
+    "botMessage": "Are you ready",	
+	"triggerTTs": "Let's start with some question"		// the bot resopnds by speaking this text on user interaction
+    "nextNode": "climate_question"
+  },
+  "climate_question": {
+    "type": "radioTypeWithTextOnly",
+    "botMessage": "Okay, what kind of climate do you prefer for your trip?",
+    "intent": "climate",	// The intent of the question(optional field it is used to track keywords in a map which can be further used for drawing insights or processing the data)
+    "image": ["https://images.nationalgeographic.org/image/upload/v1638887255/EducationHub/photos/day-in-the-tropics.jpg",	// You can provide with any number of image links
+    "https://cdn.pixabay.com/photo/2017/09/20/06/27/bridge-2767545_640.jpg"],
+    "layoverData" : ["Tropical(Beaches, Warm & Humid)", "Moderate(Greenery, Pleasant Weather)"],	// This is optional and is used when the text needs to be shown on the image(layoverData[i] will be mapped with image[i])
+    "options": [
+      {
+        "label": "Tropical (Beaches, Warm & Humid)",	// Option name to be shown 
+        "value": "Tropical (Beaches, Warm & Humid)",	// The user reply shown on the screen when user selects this option and also serves as the answer of the intent if intent is present
+        "nextNode": "budget_question",
+        "radioOptionTTs": "Tropical climates are Perfect for a sunny escape!"		// the bot responds to the user interaction when this option is selected
+      },
+      {
+        "label": "Moderate (Greenery, Pleasant Weather)",
+        "value": "Moderate (Greenery, Pleasant Weather)",
+        "nextNode": "budget_question",
+        "radioOptionTTs": "Lovely pick! Nature and comfort combined!"
+      }
+    ]
+  },
+  "budget_question": {
+    "type": "radioTypeWithTextOnly",
+    "botMessage": "What is your budget for this trip?",
+    "intent": "budget",			 
+    "options": [
+      {
+        "label": "Low Budget (Economical)",	
+        "value": "Low Budget (Economical)",		
+        "nextNode": "activities_question",
+        "radioOptionTTs": "Smart choice! Great experiences don’t need big spending!"
+      },
+      {
+        "label": "Medium Budget (Comfortable)",
+        "value": "Medium Budget (Comfortable)",
+        "nextNode": "activities_question",
+        "radioOptionTTs": "Perfect balance! Comfort and adventure go hand in hand!"
+      }
+    ]
+  },
+  "activities_question": {
+    "type": "checkboxInGridView",
+    "botMessage": "Which activities are you interested in?",
+    "intent": "interested activities",
+    "options": [
+      {
+        "label": "Adventure Sports",
+        "description": "Thrill-seekers’ paradise! Experience adrenaline-pumping activities like skydiving, scuba diving, trekking, and more!",	// part of attachment
+        "value": "Adventure Sports",
+        "images": ["https://images.pexels.com/photos/70361/california-parachutists-skydivers-flares-70361.jpeg",
+        "https://media.cnn.com/api/v1/images/stellar/prod/sb3-2023-march-ssv-reubenkrabbe.jpg?c=16x9&q=h_833,w_1480,c_fill"],
+        "video": "https://youtu.be/UAfL7gzx72Y?si=gzOec3QDsEpTotBV"
+      },
+      {
+        "label": "Cultural Experiences",
+        "description": "Immerse yourself in rich traditions, festivals, local arts, and historical heritage for an authentic journey!",
+        "value": "Cultural Experiences",
+        "images": ["https://litmag.co.uk/wp-content/uploads/2024/05/culture2-jpg.webp",
+        "https://utsav.gov.in/public/festival_top/1659608853.jpg"],
+        "video": "https://youtu.be/NrB5rvEMyo0?si=pkJ1T_IRGFmZgK3X"
+      },
+      {
+        "label": "Food Tours",
+        "value": "Food Tours"
+      },
+    ],
+    "triggerTTs": "Great! Let’s refine your search.",
+    "nextNode": "check_is_human"
+  },
+  "check_is_human": {
+    "type": "multimedia",
+    "botMessage": "Okay, Can you provide video and images of yours to verify you are a human.",
+    "options": [
+      { "record_video": "Upload a video of your surrounding" },	// Give this option if you want to record a video and the text specifies what will be shown on the card
+      { "click_photo": "Click a photo of your face" },		// Give this option if you want the user to capture images
+	  { "record_audio": "Record an audio speking your name loud"}			// Give this option if you want the user to record audio
+    ],
+    "nextNode": "outside_recommendations"
+  },
+  "outside_recommendations": {
+    "type": "radioTypeWithAttachments",
+    "botMessage": "Okay, based on your preferences, here are some ideal countries for you. Which one would you prefer",
+    "intent" : "preferred place",
+    "options": [
+      {
+        "label": "Switzerland - Snow & Adventure",
+        "value": "Switzerland - Snow & Adventure",
+        "images": ["https://handluggageonly.co.uk/wp-content/uploads/2014/10/Hand-Luggage-Only-2.jpg",
+        "https://journeyz.co/wp-content/uploads/2020/08/Basel-2048x1365.jpg"],
+        "nextNode": "final_itinerary",
+        "radioOptionTTs": "A fairytale land! Adventure and beauty combined!"
+      },
+      {
+        "label": "Thailand - Beaches & Food",
+        "value": "Thailand - Beaches & Food",
+        "images": ["https://handluggageonly.co.uk/wp-content/uploads/2017/09/Wat-Arun.jpg",
+        "https://www.emperortraveline.com/wp-content/uploads/2021/12/Thailand.jpg"],
+        "nextNode": "final_itinerary",
+        "radioOptionTTs": "Exotic flavors and stunning beaches—pure bliss!"
+      }
+    ]
+  },
+  "final_itinerary": {
+    "type": "label",
+    "botMessage": "We will be contacting you soon after completing a full itinerary according to your choices.",
+    "nextNode": null
+  },
+}
