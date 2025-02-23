@@ -2,7 +2,7 @@
 FlowBot - JSON Driven Dynamic ChatBot
 This bot operates based on a JSON file structure that defines its flow. Below are the different types of nodes and their functionalities.
 Features of the Bot:
-1. You do not have to change anything in the code just create a json file, save it in assets section section with .json extension and add it in the assests section in pubspec.yaml. Now just aupdate the fileName in main.dart with your specified file name and the bot is ready.
+1. You do not have to change anything in the code just create a json file, save the json file in assets section with .json extension and add it under the assests section in pubspec.yaml. Now just aupdate the fileName in main.dart with your specified file name and the bot is ready.
 2. The Bot have following type of nodes:
    Single-Select (Radio) Node which includes -
          radioTypeWithAttachments – Each option has an associated media attachment (image, video, or audio) and,
