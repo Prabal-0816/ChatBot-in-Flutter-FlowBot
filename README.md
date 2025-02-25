@@ -4,6 +4,8 @@ FlowBot - JSON Driven Dynamic ChatBot
 To view the whole working video you can go through my LinkedIn post :
 https://www.linkedin.com/posts/prabalpandey08_flutter-chatbot-ai-activity-7299175143627464704-TI9n?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD1_oTkBngQB66OdExQKHfK5-76oi-7_fTE
 
+To make your own json file you can refer to the "Bot Flow JSON Guide" file in the project and use the prompt to create you own flow.
+
 This bot operates based on a JSON file structure that defines its flow. Below are the different types of nodes and their functionalities.
 Features of the Bot:
 1. You do not have to change anything in the code just create a json file, save the json file in assets section with .json extension and add it under the assests section in pubspec.yaml. Now just aupdate the fileName in main.dart with your specified file name and the bot is ready OR,
