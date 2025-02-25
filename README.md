@@ -1,13 +1,5 @@
 # ChatBot-in-Flutter-FlowBot
 FlowBot - JSON Driven Dynamic ChatBot
-Here are some of its working image
-![VideoCapture_1](https://github.com/user-attachments/assets/49aa0cb0-5051-4cf8-9771-fe51cf90ec2d)
-![VideoCapture_2](https://github.com/user-attachments/assets/f17457f1-3a28-4998-9854-c92693528ef7)
-![VideoCapture_3](https://github.com/user-attachments/assets/10f06530-d265-4c27-9d7f-632bc9fceb01)
-![VideoCapture_4](https://github.com/user-attachments/assets/f865e0a7-6f22-408b-ba19-a7e6eb092bec)
-![VideoCapture5](https://github.com/user-attachments/assets/0c21ef02-c6fc-48a9-a7ad-1c25993aeeef)
-![VideoCapture_6](https://github.com/user-attachments/assets/19e5ab5d-8fce-4ca8-afae-921112f6e2b8)
-
 To view the whole working video you can go through my LinkedIn post :
 https://www.linkedin.com/posts/prabalpandey08_flutter-chatbot-ai-activity-7299175143627464704-TI9n?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD1_oTkBngQB66OdExQKHfK5-76oi-7_fTE
 
@@ -34,3 +26,11 @@ Features of the Bot:
          labelWithNext – Displays a message, but the flow continues only when the user clicks "Next".
 4. In the images you add multiple image links and the images will be presented in form of a carousel.
 5. It also have a functionality of layover data to show text over the images. (text in layoverData[i] will be mapped with the image in image[i])
+
+Here are some of its working image
+![VideoCapture_1](https://github.com/user-attachments/assets/49aa0cb0-5051-4cf8-9771-fe51cf90ec2d)
+![VideoCapture_2](https://github.com/user-attachments/assets/f17457f1-3a28-4998-9854-c92693528ef7)
+![VideoCapture_3](https://github.com/user-attachments/assets/10f06530-d265-4c27-9d7f-632bc9fceb01)
+![VideoCapture_4](https://github.com/user-attachments/assets/f865e0a7-6f22-408b-ba19-a7e6eb092bec)
+![VideoCapture5](https://github.com/user-attachments/assets/0c21ef02-c6fc-48a9-a7ad-1c25993aeeef)
+![VideoCapture_6](https://github.com/user-attachments/assets/19e5ab5d-8fce-4ca8-afae-921112f6e2b8)
