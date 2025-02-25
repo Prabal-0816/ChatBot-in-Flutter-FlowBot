@@ -6,9 +6,10 @@ https://www.linkedin.com/posts/prabalpandey08_flutter-chatbot-ai-activity-729917
 
 This bot operates based on a JSON file structure that defines its flow. Below are the different types of nodes and their functionalities.
 Features of the Bot:
-1. You do not have to change anything in the code just create a json file, save the json file in assets section with .json extension and add it under the assests section in pubspec.yaml. Now just aupdate the fileName in main.dart with your specified file name and the bot is ready.
-2. To make it more interactive, I have used Flutter's talk to speech module which speaks out each bot question and responds to user interactions(when user selects any option or clicks the next button). You can customize what to respond in the JSON file.
-3. The Bot have following type of nodes:
+1. You do not have to change anything in the code just create a json file, save the json file in assets section with .json extension and add it under the assests section in pubspec.yaml. Now just aupdate the fileName in main.dart with your specified file name and the bot is ready OR,
+   The best alternative is to upload your json file over the internet and update the fileName in main.dart with the file link and you are done.
+3. To make it more interactive, I have used Flutter's talk to speech module which speaks out each bot question and responds to user interactions(when user selects any option or clicks the next button). You can customize what to respond in the JSON file.
+4. The Bot have following type of nodes:
    Single-Select (Radio) Node which includes -
          radioTypeWithAttachments – Each option has an associated media attachment (image, video, or audio) and,
          radioTypeWithTextOnly – Options share a common set of images.
@@ -25,8 +26,8 @@ Features of the Bot:
    Label Nodes (For Bot Messages)
          label – Displays a message and automatically triggers the next node.
          labelWithNext – Displays a message, but the flow continues only when the user clicks "Next".
-4. In the images you add multiple image links and the images will be presented in form of a carousel.
-5. It also have a functionality of layover data to show text over the images. (text in layoverData[i] will be mapped with the image in image[i])
+5. In the images you add multiple image links and the images will be presented in form of a carousel.
+6. It also have a functionality of layover data to show text over the images. (text in layoverData[i] will be mapped with the image in image[i])
 
 Here are some of its working image
 ![VideoCapture_1](https://github.com/user-attachments/assets/49aa0cb0-5051-4cf8-9771-fe51cf90ec2d)
